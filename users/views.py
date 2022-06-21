@@ -13,7 +13,7 @@ def connect():
 
 # Create your views here.
 def show_categories(request):
-    return render(request, "index.html")
+    return render(request, "user_home.html")
 
 def categorywise_complaints(request):
     conn = connect()
@@ -28,4 +28,4 @@ def categorywise_complaints(request):
     complains = c.fetchall()
     conn.close()
 
-    return render(request, "category.html", {"complains" : complains})
+    return render(request, "complains.html", {"complains" : complains})
