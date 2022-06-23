@@ -1,3 +1,5 @@
+console.log(complains);
+
 const container = document.querySelector('.container');
 
 let limit = 4;

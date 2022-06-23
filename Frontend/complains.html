@@ -16,6 +16,10 @@
         <h1>Complaint category: Garden</h1>
         <!-- upvote button in future, rather than post-id -->
     </div>
-    <script src="{% static 'styles/complains/script.js' %}"></script>
+    <script> 
+        var complains = JSON.parse("{{complains | escapejs}}");
+    </script>
+    <script src="{% static 'styles/complains/script.js' %}">
+    </script>
 </body>
 </html>
