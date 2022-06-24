@@ -26,13 +26,14 @@ def categorywise_complaints(request):
     ''')
 
     colnames = [desc[0] for desc in c.description]
-    print(colnames)
 
     complains = c.fetchall()
     complains = [dict(zip(colnames, complain)) for complain in complains]
-    print(complains)
 
     complains = json.dumps(complains, indent=4, sort_keys=True, default=str)
     conn.close()
 
     return render(request, "complains.html", {"complains" : complains})
+
+def add_complain(request):
+    return render(request, "add_complain.html")
