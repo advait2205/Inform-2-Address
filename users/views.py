@@ -13,6 +13,9 @@ def connect():
         )
 
 # Create your views here.
+def login(request):
+    return render(request, "login.html")
+    
 def show_categories(request):
     return render(request, "user_home.html")
 
