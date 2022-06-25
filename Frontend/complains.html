@@ -9,18 +9,41 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Complaint</title>
+    <script src="{% static '/styles/complains/script.js' %}" defer></script>
+    <link rel="shortcut icon" href="#">
     <link rel="stylesheet" href="{% static 'styles/complains/style.css' %}">
+
 </head>
 <body>
-    <a href="http://127.0.0.1:8000/citizen/category/new_complain"> Add a new Compaint </a>
-    <div class="container">
-        <h1>Complaint category: Garden</h1>
-        <!-- upvote button in future, rather than post-id -->
-    </div>
-    <script> 
-        var complains = JSON.parse("{{complains | escapejs}}");
-    </script>
-    <script src="{% static 'styles/complains/script.js' %}">
-    </script>
+  <script> 
+    var complains = JSON.parse("{{complains | escapejs}}");
+</script>
+    <div class="navbar">
+        <a href="#home" style="font-size: 50px;">Inform-2-Address</a>
+        <div class="dropdown">
+        <button class="dropbtn" onclick="myFunction()">Dropdown
+          <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content" id="myDropdown">
+          <button onclick="btn_click1()">Link 1</button>
+          <button onclick="btn_click1()">Link 2</button>
+          <button onclick="btn_click1()">Link 3</button>
+          <button onclick="btn_click1()">Link 4</button>
+          <button onclick="btn_click1()">Link 5</button>
+        </div>
+        </div> 
+      </div>
+
+      <!-- Infinte Scroll Starts -->
+
+      <div class="container" id="container">
+        <h1>Blog Posts</h1>
+      </div>
+      
+      <div class="loading">
+        <div class="ball"></div>
+        <div class="ball"></div>
+        <div class="ball"></div>
+      </div>
 </body>
 </html>
