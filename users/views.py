@@ -40,7 +40,7 @@ def categorywise_complaints(request, category):
     complains = json.dumps(complains, indent=4, sort_keys=True, default=str)
     conn.close()
 
-    empty = "There is no complain with given category"
+    empty = "There are no complains with given category"
 
     if complains.__len__() == 0:
         empty = ""
