@@ -40,7 +40,12 @@ def categorywise_complaints(request, category):
     complains = json.dumps(complains, indent=4, sort_keys=True, default=str)
     conn.close()
 
-    return render(request, "complains.html", {"complains" : complains})
+    empty = "There is no complain with given category"
+
+    if complains.__len__() == 0:
+        empty = ""
+
+    return render(request, "complains.html", {"complains" : complains, "empty" : empty})
 
 def add_complain(request, category):
 
