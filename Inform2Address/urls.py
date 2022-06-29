@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 from users import urls as user_urls
 from authority import urls as authority_urls
+from admin import urls as admin_urls
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('django_admin/', admin.site.urls),
     path('citizen/', include(user_urls), name = 'Users home page'),
     path('authority/', include(authority_urls), name = 'Authority home page'),
+    path('admin/', include(admin_urls), name = 'Admin home page'),
 ]

@@ -7,7 +7,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->
-	<link rel="icon" type="image/png" href="{% static "styles/login/images/icons/favicon.ico"/>
+	<link rel="icon" type="image/png" href="{% static "styles/login/images/icons/favicon.ico" %}"/>
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{% static "styles/login/vendor/bootstrap/css/bootstrap.min.css" %}">
 <!--===============================================================================================-->
@@ -32,10 +32,10 @@
 <body>
 
 	<div class="limiter">
-		<div class="container-login100" style="background-image: url('images/bg-01.jpg');">
+		<div class="container-login100" style="background-image: url('{% static "images/bg-01.jpg" %}');">
 			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
 				<form class="login100-form validate-form">
-					<span class="login100-form-title p-b-49">
+					<span class="login100-form-title p-b-49"  method = "POST" action="citizen/login">
 						Login
 					</span>
 
@@ -103,21 +103,21 @@
 	<div id="dropDownSelect1"></div>
 
 <!--===============================================================================================-->
-	<script src="{% static "styles/login/vendor/jquery/jquery-3.2.1.min.js"></script>
+	<script src="{% static "styles/login/vendor/jquery/jquery-3.2.1.min.js" %}"></script>
 <!--===============================================================================================-->
-	<script src="{% static "styles/login/vendor/animsition/js/animsition.min.js"></script>
+	<script src="{% static "styles/login/vendor/animsition/js/animsition.min.js" %}"></script>
 <!--===============================================================================================-->
-	<script src="{% static "styles/login/vendor/bootstrap/js/popper.js"></script>
-	<script src="{% static "styles/login/vendor/bootstrap/js/bootstrap.min.js"></script>
+	<script src="{% static "styles/login/vendor/bootstrap/js/popper.js" %}"></script>
+	<script src="{% static "styles/login/vendor/bootstrap/js/bootstrap.min.js" %}"></script>
 <!--===============================================================================================-->
-	<script src="{% static "styles/login/vendor/select2/select2.min.js"></script>
+	<script src="{% static "styles/login/vendor/select2/select2.min.js" %}"></script>
 <!--===============================================================================================-->
-	<script src="{% static "styles/login/vendor/daterangepicker/moment.min.js"></script>
-	<script src="{% static "styles/login/vendor/daterangepicker/daterangepicker.js"></script>
+	<script src="{% static "styles/login/vendor/daterangepicker/moment.min.js" %}"></script>
+	<script src="{% static "styles/login/vendor/daterangepicker/daterangepicker.js" %}"></script>
 <!--===============================================================================================-->
-	<script src="{% static "styles/login/vendor/countdowntime/countdowntime.js"></script>
+	<script src="{% static "styles/login/vendor/countdowntime/countdowntime.js" %}"></script>
 <!--===============================================================================================-->
-	<script src="{% static "styles/login/js/main.js"></script>
+	<script src="{% static "styles/login/js/main.js" %}"></script>
 
 </body>
 </html>
