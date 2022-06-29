@@ -1,71 +1,79 @@
 <!-- /admin/statistics -->
 
+{% load static %}
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complaint</title>
-    <script src="script.js" defer></script>
+    <title>Authority Statistics</title>
+    <script src="{% static '/styles/admin_page/script.js' %}" defer></script>
     <link rel="shortcut icon" href="#">
-    <link rel="stylesheet" href="style.css">
-
+    <link rel="stylesheet" href="{% static '/styles/admin_page/style.css' %}">
 </head>
-<body>
-  <script> 
-    var authorities = JSON.parse("{{authorities | escapejs}}");
-    console.log(authorities)
-    var complains = JSON.parse("{{complains | escapejs}}");
-    console.log(complains)
+<script> 
+  var authorities = JSON.parse("{{authorities | escapejs}}");
+  console.log(authorities)
+  var complains = JSON.parse("{{complains | escapejs}}");
+  console.log(complains)
 </script>
-    <div class="navbar">
-        <a href="#home" style="font-size: 50px;">Inform-2-Address</a>
-        <div class="dropdown">
-        <button class="dropbtn" onclick="myFunction()">Filter Category
-          <i class="fa fa-caret-down"></i>
-        </button>
-        <div class="dropdown-content" id="myDropdown">
-          <button id="state" onclick="btn_onClick_State()">State</button>
-          <button id="city" onclick="btn_onClick_City()">City</button>
-          <button id="region" onclick="btn_onClick_Region()">Region</button>
-          <button id="start_time" onclick="btn_onClick_StartTime()">Start Time</button>
-        </div>
-        </div> 
-      </div>
+<body>
+  <div class="navbar">
+      <a href="#home" style="font-size: 50px;">Inform-2-Address</a> 
+  </div>
 
-      <!-- Location Modal -->
-      <div id="locationModal" class="modal">
+  <h1>Authority Statistics</h1>
 
-        <!-- Modal content -->
-        <div class="modal-content">
-          <div class="modal-header">
-            <span class="close">&times;</span>
-            <h2>Enter Your Location</h2>
-          </div>
-          <div class="modal-body">
-            <p id="modal_header">Enter the city name which you want to filter</p>
-            <form id="form" onsubmit="return false;">
-            <input type="text" id="loc" />
-               <input type="submit" value="Submit" onclick="submit_onclick()" />
-            </form>
-          </div>
-        </div>
-      
-      </div>
+  <p class="heading">Enter the authority number to get desired detials of authority</p>
 
-      <p id="chk"></p>
+  <form class="form" id="getdetails_form" onsubmit="return false;">
+    <input type="number" id="form_auth_number"/>
+    <input type="submit" value="Get Details" onclick="getdetails_onclick()"/>
+  </form>
 
-      <!-- Infinte Scroll Starts -->
 
-      <div class="container" id="container">
-        <h1>Blog Posts</h1>
-      </div>
-      
-      <div class="loading">
-        <div class="ball"></div>
-        <div class="ball"></div>
-        <div class="ball"></div>
-      </div>
+  <h1>Authority Details</h1>
+
+  <table>
+    <tr>
+      <td>Authority ID</td>
+      <td id="auth_id"></td>
+    </tr>
+    <tr>
+      <td>Authority Name</td>
+      <td id="auth_name"></td>
+    </tr>
+    <tr>
+      <td>Authority Mobile Number</td>
+      <td id="auth_mob_num"></td>
+    </tr>
+    <tr>
+      <td>Authority Department</td>
+      <td id="auth_dept"></td>
+    </tr>
+    <tr>
+      <td>Authority State</td>
+      <td id="auth_state"></td>
+    </tr>
+    <tr>
+      <td>Authority City</td>
+      <td id="auth_city"></td>
+    </tr>
+    <tr>
+      <td>Authority Region</td>
+      <td id="auth_region"></td>
+    </tr>
+    <tr>
+      <td>Authority Total Complains Resolved</td>
+      <td id="auth_tot_res"></td>
+    </tr>
+    <tr>
+      <td>Authority Total Complains Unresolved</td>
+      <td id="auth_tot_unres"></td>
+    </tr>
+  </table>
 </body>
 </html>

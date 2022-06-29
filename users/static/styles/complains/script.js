@@ -45,7 +45,7 @@
     const postElement = document.createElement('div');
     postElement.classList.add('blog-post');
     postElement.innerHTML = `
-      <h2 class="title">${"State: "+ data.state + ", City: " + data.city + ", Region: " + data.region}</h2>
+      <h2 class="title">${"State: "+  data.state + ", City: " + data.city + ", Region: " + data.region}</h2>
       <img class="post_image" src="${data.image_url}">
       <p class="text">${data.text}</p>
       <p class="date">${"Posted on: " + data.start_time.substring(0,10)}</p>
@@ -89,13 +89,14 @@ var btn = document.getElementById("btn_onClick_location");
 var span = document.getElementsByClassName("close")[0];
 
 // When the user clicks the button, open the modal 
-var scnt=0, regcnt=0, citycnt=0, startcnt=0; //onclick counters
+var scnt=0, regcnt=0, citycnt=0, startcnt=0, owncompcnt=0; //onclick counters
 
 function btn_onClick_State(){
   ++scnt;
   regcnt=0;
   citycnt=0;
   startcnt=0;
+  owncompcnt=0;
   modal.style.display = "block";
   document.getElementById("modal_header").innerHTML="Enter the State name which you want to filter";
 }
@@ -105,6 +106,7 @@ function btn_onClick_Region(){
   scnt=0;
   citycnt=0;
   startcnt=0;
+  owncompcnt=0;
   modal.style.display = "block";
   document.getElementById("modal_header").innerHTML="Enter the Region name which you want to filter"
 }
@@ -114,6 +116,7 @@ function btn_onClick_City(){
   scnt=0;
   regcnt=0;
   startcnt=0;
+  owncompcnt=0;
   modal.style.display = "block";
   document.getElementById("modal_header").innerHTML="Enter the City name which you want to filter"
 }
@@ -123,8 +126,19 @@ function btn_onClick_StartTime(){
   scnt=0;
   regcnt=0;
   citycnt=0;
+  owncompcnt=0;
   modal.style.display = "block";
   document.getElementById("modal_header").innerHTML="Enter the Start Time name which you want to filter"
+}
+
+function btn_onClick_owncomp(){
+  ++owncompcnt;
+  scnt=0;
+  regcnt=0;
+  citycnt=0;
+  startcnt=0;
+  modal.style.display="block";
+  document.getElementById("modal_header").innerHTML="Enter your Mobile Number";
 }
 function submit_onclick(){
 	var filter_val=document.getElementById("loc").value;
@@ -139,6 +153,8 @@ function submit_onclick(){
         alert('city');
       }else if(startcnt > 0){
         alert('start');
+      }else if(owncompcnt > 0){
+        alert(filter_val);
       }
       modal.style.display="none";
     }
@@ -156,3 +172,6 @@ window.onclick = function(event) {
   }
 }
 
+function fab_onClick(){
+  location.href="add_complain"
+}

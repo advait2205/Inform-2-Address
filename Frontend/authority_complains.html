@@ -5,12 +5,71 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Authority Complaints</title>
+    <script src="{% static '/styles/authority_complains/script.js' %}" defer></script>
+    <link rel="shortcut icon" href="#">
+    <link rel="stylesheet" href="{% static 'styles/authority_complains/style.css' %}">
 </head>
 <body>
     <script>
         var complains = JSON.parse("{{complains | escapejs}}");
         console.log(complains)
     </script>
+
+<div class="navbar">
+    <a href="#" style="font-size: 50px;">Inform-2-Address</a>
+    <div class="dropdown">
+    <button class="dropbtn" onclick="myFunction()">Filter Category
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content" id="myDropdown">
+      <button id="state" onclick="btn_onClick_State()">State</button>
+      <button id="city" onclick="btn_onClick_City()">City</button>
+      <button id="region" onclick="btn_onClick_Region()">Region</button>
+      <button id="start_time" onclick="btn_onClick_StartTime()">Start Time</button>
+      <button id="own_complains" onclick="btn_onClick_owncomp()">My Complaints</button>
+    </div>
+    </div> 
+  </div>
+
+  <!-- Location Modal -->
+  <div id="locationModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="close">&times;</span>
+        <h2>Enter Your Location</h2>
+      </div>
+      <div class="modal-body">
+        <p id="modal_header">Enter the city name which you want to filter</p>
+        <form id="form" onsubmit="return false;">
+        <input type="text" id="loc" />
+           <input type="submit" value="Submit" onclick="submit_onclick()" />
+        </form>
+      </div>
+    </div>
+  
+  </div>
+
+  <p id="chk"></p>
+
+  <!-- Infinte Scroll Starts -->
+
+  <div class="container" id="container">
+    <h1>Complaints</h1>
+  </div>
+    
+  <br>
+  <div class="container" id="container">
+      <h2>{{empty}}</h2>
+  </div>
+  
+  <div class="loading">
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+  </div>
+
 </body>
 </html>
