@@ -8,14 +8,12 @@ def login(request):
     return render(request, "authority_login.html")
 
 def assigned_complains(request):
-    
     conn = connect()
     c = conn.cursor()
 
     c.execute(f'''
         SELECT *
         FROM my_db.complains
-        WHERE lower(department) = lower('{category}')
     ''')
 
     colnames = [desc[0] for desc in c.description]
