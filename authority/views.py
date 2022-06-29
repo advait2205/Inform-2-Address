@@ -1,12 +1,10 @@
 from django.shortcuts import render
 from users.views import connect
 
-import authority
-
 # Create your views here.
 
 def login(request):
-    return render(request, "login.html")
+    return render(request, "authority_login.html")
 
 def add_authority(request):
     if request.method == "POST":
