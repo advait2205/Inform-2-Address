@@ -1,7 +1,3 @@
-<!-- User Complaint page -->
-<!-- static files are in folder users/static/styles/complains -->
-{% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,9 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Complaint</title>
-    <script src="{% static '/styles/complains/script.js' %}" defer></script>
+    <script src="script.js" defer></script>
     <link rel="shortcut icon" href="#">
-    <link rel="stylesheet" href="{% static 'styles/complains/style.css' %}">
+    <link rel="stylesheet" href="style.css">
 
 </head>
 <body>
@@ -60,17 +56,11 @@
       <div class="container" id="container">
         <h1>Blog Posts</h1>
       </div>
-        
-      <br>
-      <div class="container" id="container">
-          <h2>{{empty}}</h2>
-      </div>
       
       <div class="loading">
         <div class="ball"></div>
         <div class="ball"></div>
         <div class="ball"></div>
       </div>
-
 </body>
 </html>
