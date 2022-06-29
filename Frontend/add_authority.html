@@ -212,38 +212,39 @@
   </head>
   <body>
     <div class="testbox">
-      <form action="/">
+      <form action="add_authority" method = "POST">
+        {% csrf_token %}
         <div class="banner">
           <h1>New Authority Registration</h1>
         </div>
         <div class="colums">
           <div class="item">
-            <label for="fname"> Name<span>*</span></label>
-            <input id="fname" type="text" name="fname" required/>
+            <label for="name"> Name<span>*</span></label>
+            <input id="name" type="text" name="name" required/>
           </div>
           <div class="item">
-            <label for="lname"> Mobile Number<span>*</span></label>
-            <input id="lname" type="text" name="lname" required/>
+            <label for="mobile"> Mobile Number<span>*</span></label>
+            <input id="mobile" type="text" name="mobile" required/>
           </div>
           <div class="item">
-            <label for="address1">Department<span>*</span></label>
-            <input id="address1" type="text"   name="address1" required/>
+            <label for="department">Department<span>*</span></label>
+            <input id="department" type="text"   name="department" required/>
           </div>
           <div class="item">
-            <label for="address2">Region<span>*</span></label>
-            <input id="address2" type="text"   name="address2" required/>
+            <label for="region">Region<span>*</span></label>
+            <input id="region" type="text"   name="region" required/>
           </div>
           <div class="item">
-            <label for="state">City<span>*</span></label>
-            <input id="state" type="text"   name="state" required/>
-          </div>
-          <div class="item">
-            <label for="zip">State<span>*</span></label>
-            <input id="zip" type="text" name="zip" required/>
-          </div>
-          <div class="item">
-            <label for="city">Password<span>*</span></label>
+            <label for="city">City<span>*</span></label>
             <input id="city" type="text"   name="city" required/>
+          </div>
+          <div class="item">
+            <label for="state">State<span>*</span></label>
+            <input id="state" type="text" name="state" required/>
+          </div>
+          <div class="item">
+            <label for="Password">Password<span>*</span></label>
+            <input id="Password" type="text"   name="password" required/>
           </div>
         </div>
         </div>

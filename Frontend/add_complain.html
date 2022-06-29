@@ -212,30 +212,31 @@
   </head>
   <body>
     <div class="testbox">
-      <form action="/">
+      <form action="add_complain" method="POST">
+        {% csrf_token %}
         <div class="banner">
           <h1>Add New Complain</h1>
         </div>
         <div class="colums">
           <div class="item">
-            <label for="fname">User Mobile Number<span>*</span></label>
-            <input id="fname" type="text" name="fname" required/>
+            <label for="contact">User Mobile Number<span>*</span></label>
+            <input id="contact" type="mobile" name="mobile" required/>
           </div>
           <div class="item">
-            <label for="lname"> Region <span>*</span></label>
-            <input id="lname" type="text" name="lname" required/>
+            <label for="region"> Region <span>*</span></label>
+            <input id="region" type="text" name="region" required/>
           </div>
           <div class="item">
-            <label for="address1"> City <span>*</span></label>
-            <input id="address1" type="text"   name="address1" required/>
+            <label for="city"> City <span>*</span></label>
+            <input id="city" type="text"   name="city" required/>
           </div>
           <div class="item">
-            <label for="address2"> State <span>*</span></label>
-            <input id="address2" type="text" name="address2" required/>
+            <label for="state"> State <span>*</span></label>
+            <input id="state" type="text" name="state" required/>
           </div>
           <div class="item">
             <label for="details">Details</label>
-            <textarea id="details" class="comment" rows = "5" cols = "120" name = "description" required>
+            <textarea id="details" class="comment" rows = "5" cols = "120" name = "details" required>
             </textarea><br>
           </div>
           <div class="item">
