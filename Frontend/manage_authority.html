@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,8 +6,46 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage authority</title>
+    <script src="{% static '/styles/manage_authority/script.js' %}" defer></script>
+    <link rel="shortcut icon" href="#">
+    <link rel="stylesheet" href="{% static 'styles/manage_authority/style.css' %}">
 </head>
 <body>
-    
+    <div class="navbar">
+        <a href="#home" style="font-size: 50px;">Inform-2-Address</a> 
+    </div>
+
+    <h1>Manage Authority</h1>
+
+    <p class="heading">Enter the mobile number to add an authority</p>
+
+    <form class="form" id="get_auth_mob_num_form" onsubmit="return false;">
+        <input type="mobile" id="form_mob_num"/>
+        <input type="submit" value="Add Authority" onclick="add_auth_onclick()"/>
+    </form>
+
+    <p class="heading">Enter the Category Name to Remove an authority from</p>
+    <form class="form" id="get_cat_form" onsubmit="return false;">
+        <input type="text" id="form_get_cat"/>
+        <input type="submit" value="Remove Authority" onclick="remove_auth_onclick()"/>
+    </form>
+
+    <div id="locationModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="close">&times;</span>
+            <h2 id="modal_h2">Enter Your Location</h2>
+          </div>
+          <div class="modal-body">
+            <p id="modal_header">Enter the city name which you want to filter</p>
+            <form id="form" onsubmit="return false;">
+            <input type="text" id="modal_input" />
+               <input type="submit" value="Submit" onclick="submit_onclick()" />
+            </form>
+          </div>
+        </div>
+      </div>
 </body>
 </html>

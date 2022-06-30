@@ -98,6 +98,7 @@ function btn_onClick_State(){
   startcnt=0;
   owncompcnt=0;
   modal.style.display = "block";
+  document.getElementById("modal_h2").innerHTML="Enter State";
   document.getElementById("modal_header").innerHTML="Enter the State name which you want to filter";
 }
 
@@ -108,6 +109,7 @@ function btn_onClick_Region(){
   startcnt=0;
   owncompcnt=0;
   modal.style.display = "block";
+  document.getElementById("modal_h2").innerHTML="Enter Region";
   document.getElementById("modal_header").innerHTML="Enter the Region name which you want to filter"
 }
 
@@ -118,6 +120,7 @@ function btn_onClick_City(){
   startcnt=0;
   owncompcnt=0;
   modal.style.display = "block";
+  document.getElementById("modal_h2").innerHTML="Enter City";
   document.getElementById("modal_header").innerHTML="Enter the City name which you want to filter"
 }
 
@@ -128,6 +131,7 @@ function btn_onClick_StartTime(){
   citycnt=0;
   owncompcnt=0;
   modal.style.display = "block";
+  document.getElementById("modal_h2").innerHTML="Enter Start Time";
   document.getElementById("modal_header").innerHTML="Enter the Start Time name which you want to filter"
 }
 
@@ -138,6 +142,7 @@ function btn_onClick_owncomp(){
   citycnt=0;
   startcnt=0;
   modal.style.display="block";
+  document.getElementById("modal_h2").innerHTML="Enter Mobile Number";
   document.getElementById("modal_header").innerHTML="Enter your Mobile Number";
 }
 function submit_onclick(){
