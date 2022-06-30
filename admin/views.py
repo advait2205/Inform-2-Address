@@ -20,6 +20,10 @@ def get_statistics(request):
         colnames = [desc[0] for desc in c.description]
 
         authority = c.fetchone()
+
+        if authority is None:
+            return render(request, "admin_page.html", {"empty": "No user exists"})
+
         authority = dict(zip(colnames, authority))
         
         c.execute(f'''
@@ -65,3 +69,6 @@ def add_authority(request):
         conn.close()
             
     return render(request, "add_authority.html")
+
+def manage_authority(request):
+    return render(request, "manage_authority.html")
