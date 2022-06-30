@@ -1,8 +1,5 @@
-<!-- /admin/statistics -->
-
 {% load static %}
-
-
+<!-- /admin/statistics -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,10 +12,7 @@
     <link rel="stylesheet" href="{% static '/styles/admin_page/style.css' %}">
 </head>
 <script> 
-  var authorities = JSON.parse("{{authorities | escapejs}}");
-  console.log(authorities)
-  var complains = JSON.parse("{{complains | escapejs}}");
-  console.log(complains)
+    var complains = JSON.parse("{{complains | escapejs}}");
 </script>
 <body>
   <div class="navbar">
@@ -27,44 +21,43 @@
 
   <h1>Authority Statistics</h1>
 
-  <p class="heading">Enter the authority number to get desired detials of authority</p>
+  <p class="heading">Enter the authority mobile number to get desired detials of authority</p>
 
-  <form class="form" id="getdetails_form" onsubmit="return false;">
-    <input type="number" id="form_auth_number"/>
-    <input type="submit" value="Get Details" onclick="getdetails_onclick()"/>
+  <form class="form" id="getdetails_form" action="statistics" method="POST">
+    {% csrf_token %}
+    <input type="mobile" id="form_auth_number" name = "mobile"/>
+    <button type="submit"> Get details </button>
   </form>
 
 
+  {% if authority %}
+    
   <h1>Authority Details</h1>
-
+  
   <table>
     <tr>
-      <td>Authority ID</td>
-      <td id="auth_id"></td>
-    </tr>
-    <tr>
       <td>Authority Name</td>
-      <td id="auth_name"></td>
+      <td id="auth_name">{{authority.name}}</td>
     </tr>
     <tr>
       <td>Authority Mobile Number</td>
-      <td id="auth_mob_num"></td>
+      <td id="auth_mob_num">{{authority.mobile_number}}</td>
     </tr>
     <tr>
       <td>Authority Department</td>
-      <td id="auth_dept"></td>
+      <td id="auth_dept">authority.department</td>
     </tr>
     <tr>
       <td>Authority State</td>
-      <td id="auth_state"></td>
+      <td id="auth_state">authority.state</td>
     </tr>
     <tr>
       <td>Authority City</td>
-      <td id="auth_city"></td>
+      <td id="auth_city">{{authority.city}}</td>
     </tr>
     <tr>
       <td>Authority Region</td>
-      <td id="auth_region"></td>
+      <td id="auth_region">{{authority.region}}</td>
     </tr>
     <tr>
       <td>Authority Total Complains Resolved</td>
@@ -75,5 +68,24 @@
       <td id="auth_tot_unres"></td>
     </tr>
   </table>
+
+  <!-- Infinte Scroll Starts -->
+
+  <div class="container" id="container">
+    <h1>Complaints</h1>
+  </div>
+    
+  <br>
+  <div class="container" id="container">
+      <h2>{{empty}}</h2>
+  </div>
+  
+  <div class="loading">
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+  </div>
+
+  {% endif %}
 </body>
 </html>

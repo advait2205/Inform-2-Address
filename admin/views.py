@@ -4,31 +4,64 @@ import json
 # Create your views here.
 
 def get_statistics(request):
-    conn = connect()
-    c = conn.cursor()
 
-    c.execute(f'''
-        SELECT * FROM my_db."authority "
-    ''')
+    if request.method == "POST":
+        mobile = request.POST.get('mobile')
 
-    colnames = [desc[0] for desc in c.description]
+        conn = connect()
+        c = conn.cursor()
 
-    authorities = c.fetchall()
-    authorities = [dict(zip(colnames, authority)) for authority in authorities]
-    authorities = json.dumps(authorities, indent=4, sort_keys=True, default=str)
-    
-    c.execute(f'''
-        SELECT *
-        FROM my_db.complains
-    ''')
+        c.execute(f'''
+            SELECT * 
+            FROM my_db."authority "
+            where mobile_number = '{mobile}'
+        ''')
 
-    colnames = [desc[0] for desc in c.description]
+        colnames = [desc[0] for desc in c.description]
 
-    complains = c.fetchall()
-    complains = [dict(zip(colnames, complain)) for complain in complains]
-    complains = json.dumps(complains, indent=4, sort_keys=True, default=str)
+        authority = c.fetchone()
+        authority = dict(zip(colnames, authority))
+        
+        c.execute(f'''
+            SELECT *
+            FROM my_db.complains
+            where resolve_authority_number = '{mobile}'
+        ''')
 
-    conn.close()
-    
-    return render(request, "admin_page.html", {"authorities": authorities, "complains": complains})
+        colnames = [desc[0] for desc in c.description]
 
+        complains = c.fetchall()
+        complains = [dict(zip(colnames, complain)) for complain in complains]
+        complains = json.dumps(complains, indent=4, sort_keys=True, default=str)
+
+        print(complains)
+        
+        conn.close()
+        
+        return render(request, "admin_page.html", {"authority":authority, "complains": complains})
+
+    return render(request, "admin_page.html")
+
+def add_authority(request):
+    if request.method == "POST":
+        name = request.POST.get('name')
+        mobile = request.POST.get('mobile')
+        department = request.POST.get('department')
+        region = request.POST.get('region')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+        password = request.POST.get('password')
+
+        conn = connect()
+        c = conn.cursor()
+
+        c.execute(f'''
+            INSERT INTO my_db."authority "(
+                name, mobile_number, department, region, city, state, password)
+                VALUES ('{name}', '{mobile}', '{department}', '{region}', '{city}', '{state}', '{password}');
+        ''')
+
+        conn.commit()
+        conn.close()
+            
+    return render(request, "add_authority.html")

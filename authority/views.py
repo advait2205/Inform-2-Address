@@ -30,27 +30,3 @@ def assigned_complains(request):
         empty = ""
 
     return render(request, "authority_complains.html", {"complains": complains})
-
-def add_authority(request):
-    if request.method == "POST":
-        name = request.POST.get('name')
-        mobile = request.POST.get('mobile')
-        department = request.POST.get('department')
-        region = request.POST.get('region')
-        city = request.POST.get('city')
-        state = request.POST.get('state')
-        password = request.POST.get('password')
-
-        conn = connect()
-        c = conn.cursor()
-
-        c.execute(f'''
-            INSERT INTO my_db."authority "(
-                name, mobile_number, department, region, city, state, password)
-                VALUES ('{name}', '{mobile}', '{department}', '{region}', '{city}', '{state}', '{password}');
-        ''')
-
-        conn.commit()
-        conn.close()
-            
-    return render(request, "add_authority.html")
