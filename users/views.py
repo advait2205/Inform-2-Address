@@ -1,13 +1,19 @@
+from email import message
+from django.contrib import messages
 from operator import mod
 import re
 from django.shortcuts import render, HttpResponse,redirect
 from decouple import config
 from datetime import datetime
-from django.contrib.auth.models import Group
-from django.contrib.auth.models import User
-from django.contrib.auth import login as auth_login, authenticate
+from django.contrib.auth.models import Group, User
+from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
 import psycopg2
 import json
+
+def handler404(request, *args, **argv):
+    response = render(request, '404.html')
+    response.status_code = 404
+    return response
 
 def connect():
     return psycopg2.connect(
@@ -23,6 +29,7 @@ def login(request):
     return render(request, "login.html")
     
 def show_categories(request):
+    
     if request.method == "POST":
         mobile = request.POST.get('username')
         password = request.POST.get('password')
@@ -67,6 +74,8 @@ def show_categories(request):
             user = c.fetchone()
             groupName = "citizen"
             next = "/citizen/"
+        
+        print(request.GET.get('next'))
 
         if user is not None:
             conn.close()
@@ -84,23 +93,27 @@ def show_categories(request):
             
             user = authenticate(request, username=mobile, password=password)
 
-            if user is not None:
-                if user.is_active:
-                    auth_login(request, user)
-                    return redirect(next)
-                else:
-                    return render(request, "login.html", {"message": "User logged out, please login again"})
+            if user.is_active:
+                auth_login(request, user)
+                return redirect(next)
             else:
-                return render(request, "login.html", {"message": "Invalid creentials"})
+                messages.error(request, "User logged out, please login again")
+                return render(request, "login.html")
         
         else:
-            print("Invalid user")
-            return render(request, "login.html",{"message": "User not exist"})
+            messages.error(request, "Invalid credentials")
+            return render(request, "login.html")
 
+    if not User.objects.get(username=request.user.username).groups.all().filter(name__in=['citizen', 'admin']):
+        return handler404(request)
+    
     return render(request, "user_home.html")
 
 def categorywise_complaints(request, category):
 
+    if not User.objects.get(username=request.user.username).groups.all().filter(name__in=['citizen', 'admin']):
+        return handler404(request)
+    
     conn = connect()
     c = conn.cursor()
 
@@ -127,6 +140,13 @@ def categorywise_complaints(request, category):
 
 def add_complain(request, category):
 
+    if request.user.is_authenticated == False:
+        messages.error(request, 'Login first to file a complaint')
+        return redirect("/")
+    
+    if not User.objects.get(username=request.user.username).groups.all().filter(name__in=['citizen', 'admin']):
+        return handler404(request)
+    
     if request.method == "POST":
         text = request.POST.get('details')
         user_mobile_number = request.POST.get('mobile')
