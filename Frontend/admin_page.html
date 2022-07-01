@@ -15,6 +15,27 @@
     console.log("{{request.user.username}}")
     var complains = JSON.parse("{{complains | escapejs}}");
 </script>
+<style>
+  .navbar {
+    width: 100%;
+    overflow: hidden;
+    background-color: #333;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  
+  .navbar a {
+    float: left;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+    padding: 12px 14px;
+    text-decoration: none;
+  }
+
+    .loginlogout{
+      float: right;
+    }
+  </style>
 <body>
   <div class="navbar">
     <a href="/" style="font-size: 50px;">Inform-2-Address</a> 
