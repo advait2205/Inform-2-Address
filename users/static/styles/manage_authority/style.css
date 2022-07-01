@@ -40,6 +40,23 @@ body {
     margin-top: 20px;
   }
 
+  .loginlogout{
+    float: right;
+  }
+  .loginlogoutlink-login{
+    text-align: center;
+    line-height: 65px;
+    align-items:center;
+    justify-content: center;
+  }
+
+  .loginlogoutlink-logout{
+    text-align: center;
+    line-height: 65px;
+    align-items:center;
+    justify-content: center;
+  }
+
   .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
