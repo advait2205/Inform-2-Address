@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{% static '/styles/admin_page/style.css' %}">
 </head>
 <script> 
+    console.log("{{request.user.username}}")
     var complains = JSON.parse("{{complains | escapejs}}");
 </script>
 <body>

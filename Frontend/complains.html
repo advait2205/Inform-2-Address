@@ -16,6 +16,7 @@
 </head>
 <body>
   <script> 
+    console.log({{request.user.username}});
     var complains = JSON.parse("{{complains | escapejs}}");
 </script>
     <div class="navbar">

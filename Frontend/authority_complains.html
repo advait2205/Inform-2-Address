@@ -13,8 +13,9 @@
 </head>
 <body>
     <script>
+        console.log("{{request.user.username}}");
         var complains = JSON.parse("{{complains | escapejs}}");
-        console.log(complains)
+        // console.log(complains)
     </script>
 
 <div class="navbar">

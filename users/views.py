@@ -1,7 +1,11 @@
+from operator import mod
 import re
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse,redirect
 from decouple import config
 from datetime import datetime
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import User
+from django.contrib.auth import login as auth_login, authenticate
 import psycopg2
 import json
 
@@ -16,9 +20,83 @@ def connect():
 
 # Create your views here.
 def login(request):
-    return render(request, "citizen_login.html")
+    return render(request, "login.html")
     
 def show_categories(request):
+    if request.method == "POST":
+        mobile = request.POST.get('username')
+        password = request.POST.get('password')
+
+        conn = connect()
+        c = conn.cursor()
+
+        # Check for admin
+
+        c.execute(f'''
+            SELECT *
+            FROM my_db.admin
+            WHERE mobile_number = '{mobile}' and password = '{password}'
+        ''')
+
+        user = c.fetchone()
+        groupName = "admin"
+        next = "/admin/statistics"
+
+        if user is None:
+            # Check for authority
+
+            c.execute(f'''
+                SELECT *
+                FROM my_db."authority "
+                WHERE mobile_number = '{mobile}' and password = '{password}'
+            ''')
+
+            user = c.fetchone()
+            groupName = "authority"
+            next = "/authority/assigned_complains"
+
+        if user is None:
+            # Check for citizen
+
+            c.execute(f'''
+                SELECT *
+                FROM my_db.user
+                WHERE mobile_number = '{mobile}' and password = '{password}'
+            ''')
+
+            user = c.fetchone()
+            groupName = "citizen"
+            next = "/citizen/"
+
+        if user is not None:
+            conn.close()
+            model_user = User.objects.filter(username=mobile)
+
+            if model_user.count() == 0:
+                model_user = User(username=mobile)
+                model_user.set_password(password)
+                model_user.save()
+                Group.objects.get(name=groupName).user_set.add(model_user)
+            else:
+                model_user = model_user[0]
+                model_user.set_password(password)
+                model_user.save()
+            
+            user = authenticate(request, username=mobile, password=password)
+
+            if user is not None:
+                if user.is_active:
+                    auth_login(request, user)
+                    return redirect(next)
+                else:
+                    return render(request, "login.html", {"message": "User logged out, please login again"})
+            else:
+                return render(request, "login.html", {"message": "Invalid creentials"})
+        
+        else:
+            print("Invalid user")
+            return render(request, "login.html",{"message": "User not exist"})
+
     return render(request, "user_home.html")
 
 def categorywise_complaints(request, category):

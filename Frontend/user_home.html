@@ -16,6 +16,9 @@
     <link rel="stylesheet" type="text/css" href="{% static '/styles/home/fonts/css/font-awesome.min.css' %}">
     <link rel="stylesheet" href="{% static '/styles/home/style.css' %}">
 </head>
+<script>
+    console.log("{{request.user.username}}");
+</script>
 <body>
     <section>
         <nav class = "navbar navbar-expand-sm">

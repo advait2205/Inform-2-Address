@@ -21,7 +21,7 @@ from admin import urls as admin_urls
 
 urlpatterns = [
     path('django_admin/', admin.site.urls),
-    path('citizen/', include(user_urls), name = 'Users home page'),
+    path('', include(user_urls), name = 'Site home page'),
     path('authority/', include(authority_urls), name = 'Authority home page'),
     path('admin/', include(admin_urls), name = 'Admin home page'),
 ]
