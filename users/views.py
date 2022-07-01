@@ -155,7 +155,9 @@ def add_complain(request, category):
         city = request.POST.get('city')
         state = request.POST.get('state')
         upvotes = 0
-        resolve_authority_number = "214-224-1501"
+
+        # HAVE TO CHANGE THIS
+        resolve_authority_number = "214-224-1501" 
         
         conn = connect()
         c = conn.cursor()

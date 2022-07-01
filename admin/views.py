@@ -1,3 +1,4 @@
+from unicodedata import category
 from django.shortcuts import render,redirect
 from users.views import connect
 from django.contrib import messages
@@ -103,4 +104,53 @@ def manage_authority(request):
     if not User.objects.get(username=request.user.username).groups.all().filter(name='admin'):
         return handler404(request)
     
+
+    if request.method == "POST":
+        mobile = request.POST['mobile']
+        category = request.POST['category']
+        submit = request.POST['submit']
+        print(mobile, category, submit)
+
+        conn = connect()
+        c = conn.cursor()
+
+        c.execute(f'''
+            select *
+            from my_db."authority "
+            where mobile_number = '{mobile}'
+        ''')
+
+        colnames = [desc[0] for desc in c.description]
+        user = c.fetchone()
+        
+        if user is None:
+            messages.error(request, "No user with given id")
+        else:
+            user = dict(zip(colnames, user))
+
+            if submit == "Add to the Category":
+                if category == user['department']:
+                    messages.error(request, "Given user is already in the category " + user['department'])
+                else:
+                    c.execute(f'''
+                        UPDATE my_db."authority "
+                        SET department = '{category}'
+                        where mobile_number = '{mobile}'
+                    ''')
+                    messages.success(request, "Authority added to the department")
+            
+            else:
+                if category != user['department']:
+                    messages.error(request, "Given user is in the given category " +user['department'])
+                else:
+                    c.execute(f'''
+                        UPDATE my_db."authority "
+                        SET department = 'Not assigned'
+                        where mobile_number = '{mobile}'
+                    ''')
+                    messages.success(request, "Authority removed from department")
+
+        conn.commit()
+        conn.close()
+
     return render(request, "manage_authority.html")

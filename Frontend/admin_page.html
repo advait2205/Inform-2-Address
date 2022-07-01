@@ -38,7 +38,7 @@
 		{{ message }}
 	</div>
 	{% endfor %}
-  
+
   {% if authority %}
     
   <h1>Authority Details</h1>
@@ -54,11 +54,11 @@
     </tr>
     <tr>
       <td>Authority Department</td>
-      <td id="auth_dept">authority.department</td>
+      <td id="auth_dept">{{authority.department}}</td>
     </tr>
     <tr>
       <td>Authority State</td>
-      <td id="auth_state">authority.state</td>
+      <td id="auth_state">{{authority.state}}</td>
     </tr>
     <tr>
       <td>Authority City</td>

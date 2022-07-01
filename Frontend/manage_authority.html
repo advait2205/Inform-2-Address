@@ -16,36 +16,32 @@
     </div>
 
     <h1>Manage Authority</h1>
-
-    <p class="heading">Enter the mobile number to add an authority</p>
-
-    <form class="form" id="get_auth_mob_num_form" onsubmit="return false;">
-        <input type="mobile" id="form_mob_num"/>
-        <input type="submit" value="Add Authority" onclick="add_auth_onclick()"/>
-    </form>
-
-    <p class="heading">Enter the Category Name to Remove an authority from</p>
-    <form class="form" id="get_cat_form" onsubmit="return false;">
-        <input type="text" id="form_get_cat"/>
-        <input type="submit" value="Remove Authority" onclick="remove_auth_onclick()"/>
-    </form>
-
-    <div id="locationModal" class="modal">
-
-        <!-- Modal content -->
-        <div class="modal-content">
-          <div class="modal-header">
-            <span class="close">&times;</span>
-            <h2 id="modal_h2">Enter Your Location</h2>
-          </div>
-          <div class="modal-body">
-            <p id="modal_header">Enter the city name which you want to filter</p>
-            <form id="form" onsubmit="return false;">
-            <input type="text" id="modal_input" />
-               <input type="submit" value="Submit" onclick="submit_onclick()" />
-            </form>
-          </div>
-        </div>
+      {% for message in messages %}
+      <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
       </div>
+      {% endfor %}
+    <p class="heading">Enter the details to add the authority to the category</p>
+    <form class="form" id="get_cat_form" action="manage_authority" method = "POST">
+      {% csrf_token %}
+        <label for="mobile"> Authority ID:</label>
+        <input type="text" id="form_get_cat" name="mobile"/> &nbsp;&nbsp;&nbsp;&nbsp;
+        <label for="category"> category:</label>
+        <input type="text" id="form_get_cat" name="category" style="margin: 5px;"/><br>
+        <input type="submit" name="submit" value="Add to the Category"/>
+    </form>
+
+    <p class="heading">Enter the details to remove the authority from category</p>
+    <form class="form" id="get_cat_form" action="manage_authority" method = "POST">
+      {% csrf_token %}
+        <label for="mobile"> Authority ID:</label>
+        <input type="text" id="form_get_cat" name="mobile"/> &nbsp;&nbsp;&nbsp;&nbsp;
+        <label for="category"> category:</label>
+        <input type="text" id="form_get_cat" name="category" style="margin: 5px;"/><br>
+        <input type="submit" name="submit" value="Remove from the Category"/>
+    </form>
 </body>
 </html>
