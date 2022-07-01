@@ -12,10 +12,16 @@
 </head>
 <body>
     <div class="navbar">
-        <a href="#home" style="font-size: 50px;">Inform-2-Address</a> 
+        <a href="/" style="font-size: 50px;">Inform-2-Address</a> 
         <div class="loginlogout">
-          <a title="Log In" class="loginlogoutlink-login" href="/login/">Log In</a>
-          <a title="Log Out" class="loginlogoutlink-logout" href="?action=logout">Log Out</a>
+          <a title="Get Statistics"  class="loginlogoutlink-login" href="statistics">Get Statistics</a>
+          <a title="Add authority"  class="loginlogoutlink-login" href="add_authority">Add authority</a>
+          <a title="manage category"  class="loginlogoutlink-login" href="manage_category">Manage Category</a>
+          {% if request.user.is_authenticated == False %}          
+              <a title="Log In" class="loginlogoutlink-login" href="/">Log In</a>
+          {% else %}
+              <a title="Log Out" class="loginlogoutlink-logout" href="/logout">Log Out</a>
+          {% endif %}
       </div>
     </div>
 
@@ -34,7 +40,12 @@
         <label for="mobile"> Authority ID:</label>
         <input type="text" id="form_get_cat" name="mobile"/> &nbsp;&nbsp;&nbsp;&nbsp;
         <label for="category"> category:</label>
-        <input type="text" id="form_get_cat" name="category" style="margin: 5px;"/><br>
+        <select name="category" id="get_cat_form">
+          {% for category in categories %}
+          <option value="{{category}}">{{category}}</option>
+          {% endfor %}
+        </select>
+        <br>
         <input type="submit" name="submit" value="Add to the Category"/>
     </form>
 
@@ -44,7 +55,12 @@
         <label for="mobile"> Authority ID:</label>
         <input type="text" id="form_get_cat" name="mobile"/> &nbsp;&nbsp;&nbsp;&nbsp;
         <label for="category"> category:</label>
-        <input type="text" id="form_get_cat" name="category" style="margin: 5px;"/><br>
+        <select name="category" id="get_cat_form">
+          {% for category in categories %}
+          <option value="{{category}}">{{category}}</option>
+          {% endfor %}
+        </select>
+        <br>
         <input type="submit" name="submit" value="Remove from the Category"/>
     </form>
 </body>

@@ -95,7 +95,7 @@ def add_authority(request):
             
     return render(request, "add_authority.html")
 
-def manage_authority(request):
+def manage_category(request):
 
     if request.user.is_authenticated == False:
         messages.error(request, 'Login to proceed further')
@@ -153,4 +153,17 @@ def manage_authority(request):
         conn.commit()
         conn.close()
 
-    return render(request, "manage_authority.html")
+    conn = connect()
+    c = conn.cursor()
+
+    c.execute(f'''
+        select distinct department
+        from my_db.complains
+    ''')
+
+    categories = c.fetchall()
+    categories = [t[0] for t in categories]
+
+    conn.close()
+
+    return render(request, "manage_category.html", {"categories": categories})

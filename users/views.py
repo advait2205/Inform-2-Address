@@ -28,6 +28,13 @@ def connect():
 def login(request):
     return render(request, "login.html")
     
+def logout(request):
+    if request.user.is_authenticated == True:
+        auth_logout(request)
+        messages.success(request, "Good bye ! You are logged out now")
+
+    return redirect("/")
+
 def show_categories(request):
     
     if request.method == "POST":
@@ -104,16 +111,11 @@ def show_categories(request):
             messages.error(request, "Invalid credentials")
             return render(request, "login.html")
 
-    if not User.objects.get(username=request.user.username).groups.all().filter(name__in=['citizen', 'admin']):
-        return handler404(request)
-    
     return render(request, "user_home.html")
+
 
 def categorywise_complaints(request, category):
 
-    if not User.objects.get(username=request.user.username).groups.all().filter(name__in=['citizen', 'admin']):
-        return handler404(request)
-    
     conn = connect()
     c = conn.cursor()
 
@@ -138,14 +140,12 @@ def categorywise_complaints(request, category):
 
     return render(request, "complains.html", {"complains" : complains, "empty" : empty})
 
+
 def add_complain(request, category):
 
     if request.user.is_authenticated == False:
         messages.error(request, 'Login first to file a complaint')
         return redirect("/")
-    
-    if not User.objects.get(username=request.user.username).groups.all().filter(name__in=['citizen', 'admin']):
-        return handler404(request)
     
     if request.method == "POST":
         text = request.POST.get('details')
