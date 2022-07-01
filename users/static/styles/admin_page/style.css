@@ -166,6 +166,24 @@ h1{
     padding: 14px 16px;
     text-decoration: none;
   }
+
+  .loginlogout{
+    float: right;
+  }
+
+  .loginlogoutlink-login{
+    text-align: center;
+    line-height: 65px;
+    align-items:center;
+    justify-content: center;
+  }
+
+  .loginlogoutlink-logout{
+    text-align: center;
+    line-height: 65px;
+    align-items:center;
+    justify-content: center;
+  }
   
   .dropdown {
     float: right;
