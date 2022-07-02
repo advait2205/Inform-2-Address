@@ -45,11 +45,17 @@
     const postElement = document.createElement('div');
     postElement.classList.add('blog-post');
     postElement.innerHTML = `
-      <h2 class="title">${"State: "+  data.state + ", City: " + data.city + ", Region: " + data.region}</h2>
-      <img class="post_image" src="${data.image_url}">
-      <p class="text">${data.text}</p>
-      <p class="date">${"Posted on: " + data.start_time.substring(0,10)}</p>
-      <img class="post_upvote" src="https://i.ibb.co/z84z4QD/b9zcqp6w31w51-removebg-preview.jpg" id="post_upv" width="8%" height="8%" >
+    <img class="post_image" src="${data.image_url}">
+    <p class="text">${data.text}</p>
+    <div class='parent'>
+      <div class='child'><p class="date">${data.region + ", " + data.city + ", " + data.state}</p>
+    <p class="date">${"Posted on: " + data.start_time.substring(0,10)}</p>
+    </div>
+    <div class='child'>
+    <img class="post_upvote" src="https://i.ibb.co/z84z4QD/b9zcqp6w31w51-removebg-preview.jpg" onclick="location.href='${data.id}';" id="post_upv" width="8%" height="8%" >
+    <p class="date">${"Upvotes: " + data.upvotes}</p>
+    </div>
+    </div>
     `;
     container.appendChild(postElement);
   

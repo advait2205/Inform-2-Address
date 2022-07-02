@@ -173,3 +173,24 @@ def add_complain(request, category):
 
     return render(request, "add_complain.html")
 
+def upvote_complain(request, category, id):
+    
+    if request.user.is_authenticated == False:
+        messages.error(request, "Login to upvote a complain")
+        return redirect("/")
+
+    conn = connect()
+    c = conn.cursor()
+
+    c.execute(f'''
+        UPDATE my_db.complains
+        SET upvotes = upvotes+1
+        WHERE id = {id};
+    ''')
+
+    conn.commit()
+    conn.close()
+
+    path = request.path
+    path = path[:path.rindex("/")]
+    return redirect(path+"/complains")

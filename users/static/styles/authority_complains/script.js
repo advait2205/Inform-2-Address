@@ -40,15 +40,17 @@ async function getPost() {
 }
 // https://i.ibb.co/SPjZ97Y/imgonline-com-ua-Replace-Color-s-Z9-Bt-Ug911i-A.jpg  -- green image
 function addDataToDOM(data) {
+  // console.log(data);
   const postElement = document.createElement('div');
   postElement.classList.add('blog-post');
   postElement.innerHTML = `
     <h2 class="title">${"State: "+  data.state + ", City: " + data.city + ", Region: " + data.region}</h2>
     <img class="post_image" src="${data.image_url}">
     <p class="text">${data.text}</p>
-    <p class="date">${"Posted on: " + data.start_time.substring(0,10)}</p>
-    <img class="post_upvote" src="https://i.ibb.co/z84z4QD/b9zcqp6w31w51-removebg-preview.jpg" id="post_upv" width="8%" height="8%" >
-  `;
+    <p class="date">${"Posted on: " + data.start_time.substring(0,10)}
+    &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;${"Expected Resolve Date: " + data.end_time.substring(0,10)}
+    &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;${"Upvotes: " + data.upvotes}</p>
+  `
   container.appendChild(postElement);
 
   loading.classList.remove('show');

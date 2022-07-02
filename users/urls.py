@@ -6,5 +6,6 @@ urlpatterns = [
     path('logout', views.logout),
     path('citizen/', views.show_categories),
     path('citizen/<str:category>/complains', views.categorywise_complaints),
+    path('citizen/<str:category>/<int:id>', views.upvote_complain),
     path('citizen/<str:category>/add_complain', views.add_complain),
 ]
