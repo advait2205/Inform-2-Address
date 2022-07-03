@@ -233,15 +233,16 @@
   </head>
   <body>
     <div class="navbar">
-      <a href="/" style="font-size: 30px;">Inform-2-Address</a> 
+      <a href="/admin/statistics" style="font-size: 30px;">Inform-2-Address</a> 
       <div class="loginlogout">
+        <a title="Categories"  class="loginlogoutlink-login" href="/citizen/">Categories</a>
         <a title="Get Statistics"  class="loginlogoutlink-login" href="statistics">Get Statistics</a>
         <a title="Add authority"  class="loginlogoutlink-login" href="add_authority">Add authority</a>
         <a title="manage category"  class="loginlogoutlink-login" href="manage_category">Manage Category</a>
         {% if request.user.is_authenticated == False %}          
-            <a title="Log In" class="loginlogoutlink-login" href="/">Log In</a>
+            <a title="Log In" class="loginlogoutlink-login" href="/login">Login</a>
         {% else %}
-            <a title="Log Out" class="loginlogoutlink-logout" href="/logout">Log Out</a>
+            <a title="Log Out" class="loginlogoutlink-logout" href="/logout">Logout</a>
         {% endif %}
     </div>
   </div>

@@ -121,15 +121,19 @@ h1{
   }
   .parent {
     /* border: 1px solid black; */
-    /* margin: 10px; */
+    margin:3px;
     /* padding: 20px 20px; */
-    text-align: center;
   }
   .child {
     display: inline-block;
     /* border: 1px solid red; */
     /* padding: 10px 10px; */
     vertical-align: middle;
+  }
+  .post_image{
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
   }
   .dropdown {
     float: right;

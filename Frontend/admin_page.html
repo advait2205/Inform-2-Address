@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="{% static '/styles/admin_page/style.css' %}">
 </head>
 <script> 
-    console.log("{{request.user.username}}")
     var complains = JSON.parse("{{complains | escapejs}}");
 </script>
 <style>
@@ -38,15 +37,16 @@
   </style>
 <body>
   <div class="navbar">
-    <a href="/" style="font-size: 50px;">Inform-2-Address</a> 
+    <a href="/admin/statistics" style="font-size: 50px;">Inform-2-Address</a> 
     <div class="loginlogout">
+      <a title="Categories"  class="loginlogoutlink-login" href="/citizen/">Categories</a>
       <a title="Get Statistics"  class="loginlogoutlink-login" href="statistics">Get Statistics</a>
       <a title="Add authority"  class="loginlogoutlink-login" href="add_authority">Add authority</a>
       <a title="manage category"  class="loginlogoutlink-login" href="manage_category">Manage Category</a>
       {% if request.user.is_authenticated == False %}          
-          <a title="Log In" class="loginlogoutlink-login" href="/">Log In</a>
+          <a title="Log In" class="loginlogoutlink-login" href="/login">Login</a>
       {% else %}
-          <a title="Log Out" class="loginlogoutlink-logout" href="/logout">Log Out</a>
+          <a title="Log Out" class="loginlogoutlink-logout" href="/logout">Logout</a>
       {% endif %}
     </div>
 </div>
@@ -55,7 +55,7 @@
 
   <p class="heading">Enter the authority mobile number to get desired detials of authority</p>
 
-  <form class="form" id="getdetails_form" action="statistics" method="POST">
+  <form class="form" id="getdetails_form" action="{{request.path}}" method="POST" style = "padding: 0 1cm;">
     {% csrf_token %}
     <input type="mobile" id="form_auth_number" name = "mobile"/>
     <button type="submit"> Get details </button>
@@ -110,6 +110,28 @@
   </table>
 
   <!-- Infinte Scroll Starts -->
+  <form action="{{request.path}}" method="post" style = "padding:1cm;">
+    {% csrf_token %}
+    <label for="region"> Region:</label>
+    <input id="region" name = "region"  type="text"/>&nbsp;&nbsp;&nbsp;
+    <label for="city"> City:</label>
+    <input id="city" name = "city" type="text"/> &nbsp;&nbsp;&nbsp;
+    <label for="state"> State:</label>
+    <input id="state" name = "state" type="text"/> <br>
+    <label for="time"> Posted within: </label>
+    <select name="time" id="time">
+      <option value = "showall"> Show all </option>
+      <option value = "1week"> 1 Week </option>
+      <option value = "15days"> 15 days </option>
+      <option value = "1month"> 1 month </option>
+      <option value = "6months"> 6 months </option>
+      <option value = "1year"> 1 Year </option>
+    </select><br>
+    <input type="checkbox" id="UnresolvedOnly" name="UnresolvedOnly" value="True">
+    <label for="UnresolvedOnly"> Unresolved Only </label><br>
+    <input type="submit" value="Filter complinats"></imput><br>
+    <input type="submit" value="Reset filter"></imput>
+  </form>
 
   <div class="container" id="container">
     <h1>Complaints</h1>

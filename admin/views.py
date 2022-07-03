@@ -3,6 +3,8 @@ from django.shortcuts import render,redirect
 from users.views import connect
 from django.contrib import messages
 from django.contrib.auth.models import Group, User
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import json
 from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
 # Create your views here.
@@ -12,54 +14,97 @@ def handler404(request, *args, **argv):
     response.status_code = 404
     return response
 
-def get_statistics(request):
+def get_statistics(request, mobile):
+
+    if request.user.is_authenticated == False:
+        messages.error(request, 'Login to proceed further')
+        return redirect("/login")
+
+    if not User.objects.get(username=request.user.username).groups.all().filter(name='admin'):
+        return handler404(request)
+    
+    state = "%"
+    city = "%"
+    region = "%"
+    start_date = datetime.now() + relativedelta(months=-3)
+    end_date = start_date
+
+    if request.method == "POST":
+        print(request.POST.get('state'), request.POST.get('city'), request.POST.get('region'))
+        if request.POST.get('state') != "":
+            state = request.POST.get('state')
+        if request.POST.get('city') != "":
+            city = request.POST['city']
+        if request.POST.get('region') != "":
+            region = request.POST['region']
+        if request.POST.get('UnresolvedOnly'):
+            end_date = datetime.now()
+        
+        time = request.POST['time']
+
+        if time == "1week":
+            start_date = datetime.now() + relativedelta(days=-7)
+        elif time == "15days":
+            start_date = datetime.now() + relativedelta(days=-15)
+        elif time == "1month":
+            start_date = datetime.now() + relativedelta(months=-1)
+        elif time == "6months":
+            start_date = datetime.now() + relativedelta(months=-6)
+        elif time == "1year":
+            start_date = datetime.now() + relativedelta(years=-1)
+        elif time == "showall":
+            start_date = datetime.now() + relativedelta(years=-100)
+
+    conn = connect()
+    c = conn.cursor()
+
+    c.execute(f'''
+        SELECT * 
+        FROM my_db."authority "
+        where mobile_number = '{mobile}'
+    ''')
+
+    colnames = [desc[0] for desc in c.description]
+
+    authority = c.fetchone()
+
+    if authority is None:
+        conn.close()
+        messages.error(request, 'No user with given username')
+        return render(request, "admin_page.html")
+
+    authority = dict(zip(colnames, authority))
+    
+    c.execute(f'''
+        SELECT *
+        FROM my_db.complains
+        WHERE resolve_authority_number = '{mobile}' and state LIKE '{state}' and city LIKE '{city}' and region LIKE '{region}' and start_time > '{start_date}' and end_time > '{end_date}' 
+    ''')
+
+    colnames = [desc[0] for desc in c.description]
+
+    complains = c.fetchall()
+    complains = [dict(zip(colnames, complain)) for complain in complains]
+    complains = json.dumps(complains, indent=4, sort_keys=True, default=str)
+
+    conn.close()
+    
+    return render(request, "admin_page.html", {"authority":authority, "complains": complains})
+
+def get_mobile(request):
 
     # auth_logout(request)
     if request.user.is_authenticated == False:
         messages.error(request, 'Login to proceed further')
-        return render(request, "login.html")
+        return redirect("/login")
 
     if not User.objects.get(username=request.user.username).groups.all().filter(name='admin'):
         return handler404(request)
     
     if request.method == "POST":
         mobile = request.POST.get('mobile')
-
-        conn = connect()
-        c = conn.cursor()
-
-        c.execute(f'''
-            SELECT * 
-            FROM my_db."authority "
-            where mobile_number = '{mobile}'
-        ''')
-
-        colnames = [desc[0] for desc in c.description]
-
-        authority = c.fetchone()
-
-        if authority is None:
-            conn.close()
-            messages.error(request, 'No user with given username')
-            return render(request, "admin_page.html")
-
-        authority = dict(zip(colnames, authority))
-        
-        c.execute(f'''
-            SELECT *
-            FROM my_db.complains
-            where resolve_authority_number = '{mobile}'
-        ''')
-
-        colnames = [desc[0] for desc in c.description]
-
-        complains = c.fetchall()
-        complains = [dict(zip(colnames, complain)) for complain in complains]
-        complains = json.dumps(complains, indent=4, sort_keys=True, default=str)
-
-        conn.close()
-        
-        return render(request, "admin_page.html", {"authority":authority, "complains": complains})
+        print(mobile)
+        return redirect(request.path+f"{mobile}")
 
     return render(request, "admin_page.html")
 
@@ -67,7 +112,7 @@ def add_authority(request):
 
     if request.user.is_authenticated == False:
         messages.error(request, 'Login to proceed further')
-        return render(request, "login.html")
+        return redirect("/login")
 
     if not User.objects.get(username=request.user.username).groups.all().filter(name='admin'):
         return handler404(request)
@@ -99,20 +144,20 @@ def manage_category(request):
 
     if request.user.is_authenticated == False:
         messages.error(request, 'Login to proceed further')
-        return render(request, "login.html")
+        return redirect("/login")
 
     if not User.objects.get(username=request.user.username).groups.all().filter(name='admin'):
         return handler404(request)
     
+
+    conn = connect()
+    c = conn.cursor()
 
     if request.method == "POST":
         mobile = request.POST['mobile']
         category = request.POST['category']
         submit = request.POST['submit']
         print(mobile, category, submit)
-
-        conn = connect()
-        c = conn.cursor()
 
         c.execute(f'''
             select *
@@ -150,12 +195,6 @@ def manage_category(request):
                     ''')
                     messages.success(request, "Authority removed from department")
 
-        conn.commit()
-        conn.close()
-
-    conn = connect()
-    c = conn.cursor()
-
     c.execute(f'''
         select distinct department
         from my_db.complains
@@ -163,7 +202,5 @@ def manage_category(request):
 
     categories = c.fetchall()
     categories = [t[0] for t in categories]
-
-    conn.close()
 
     return render(request, "manage_category.html", {"categories": categories})

@@ -13,46 +13,46 @@
 </head>
 <body>
     <script>
-        console.log("{{request.user.username}}");
         var complains = JSON.parse("{{complains | escapejs}}");
         // console.log(complains)
     </script>
 
 <div class="navbar">
     <a href="/" style="font-size: 50px;">Inform-2-Address</a>
-    <div class="dropdown">
-    <button class="dropbtn" onclick="myFunction()">Filter Category
-      <i class="fa fa-caret-down"></i>
-    </button>
-    <div class="dropdown-content" id="myDropdown">
-      <button id="state" onclick="btn_onClick_State()">State</button>
-      <button id="city" onclick="btn_onClick_City()">City</button>
-      <button id="region" onclick="btn_onClick_Region()">Region</button>
-      <button id="start_time" onclick="btn_onClick_StartTime()">Start Time</button>
-      <button id="own_complains" onclick="btn_onClick_owncomp()">My Complaints</button>
-    </div>
-    </div> 
+    <div class="loginlogout">
+      {% if request.user.is_authenticated == False %}          
+          <a title="Log In" class="loginlogoutlink-login" href="/login">Login</a>
+      {% else %}
+          <a title="Log Out" class="loginlogoutlink-logout" href="/logout">Logout</a>
+      {% endif %}
   </div>
-
-  <!-- Location Modal -->
-  <div id="locationModal" class="modal">
-
-    <!-- Modal content -->
-    <div class="modal-content">
-      <div class="modal-header">
-        <span class="close">&times;</span>
-        <h2>Enter Your Location</h2>
-      </div>
-      <div class="modal-body">
-        <p id="modal_header">Enter the city name which you want to filter</p>
-        <form id="form" onsubmit="return false;">
-        <input type="text" id="loc" />
-           <input type="submit" value="Submit" onclick="submit_onclick()" />
-        </form>
-      </div>
-    </div>
-  
-  </div>
+</div>
+  <form action="assigned_complains" method="post" style = "padding:1cm;">
+    {% csrf_token %}
+    <label for="region"> Region:</label>
+    <input id="region" name = "region"  type="text"/> &nbsp;&nbsp;&nbsp;
+    <label for="city"> City:</label>
+    <input id="city" name = "city" type="text"/> &nbsp;&nbsp;&nbsp;
+    <label for="state"> State:</label>
+    <input id="state" name = "state" type="text"/> <br>
+    
+    
+    <label for="time"> Posted within: </label>
+    <select name="time" id="time">
+      <option value = "showall"> Show all </option>
+      <option value = "1week"> 1 Week </option>
+      <option value = "15days"> 15 days </option>
+      <option value = "1month"> 1 month </option>
+      <option value = "6months"> 6 months </option>
+      <option value = "1year"> 1 Year </option>
+    </select><br>
+    
+    <input type="checkbox" id="UnresolvedOnly" name="UnresolvedOnly" value="True">
+    <label for="UnresolvedOnly"> Unresolved Only </label><br>
+    
+    <input type="submit" value="Filter complinats"></imput><br>
+    <input type="submit" value="Reset Filter"></imput>
+  </form>
 
   <p id="chk"></p>
 

@@ -52,8 +52,8 @@
     <p class="date">${"Posted on: " + data.start_time.substring(0,10)}</p>
     </div>
     <div class='child'>
-    <img class="post_upvote" src="https://i.ibb.co/z84z4QD/b9zcqp6w31w51-removebg-preview.jpg" onclick="location.href='${data.id}';" id="post_upv" width="8%" height="8%" >
-    <p class="date">${"Upvotes: " + data.upvotes}</p>
+    <img class="post_upvote" src="https://i.ibb.co/z84z4QD/b9zcqp6w31w51-removebg-preview.jpg" onclick="location.href='${data.id}';" id="post_upv" width="6%" height="6%" >
+    <p class="date">${data.upvotes}</p>
     </div>
     </div>
     `;

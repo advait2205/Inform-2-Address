@@ -16,21 +16,20 @@
 </head>
 <body>
   <script> 
-    console.log("{{request.user.username}}");
     var complains = JSON.parse("{{complains | escapejs}}");
 </script>
     <div class="navbar">
-        <a href="/" style="font-size: 50px;">Inform-2-Address</a>
+        <a href="/citizen" style="font-size: 50px;">Inform-2-Address</a>
         <div class="loginlogout">
           <a title="Home" class="loginlogoutlink-login" href="/citizen">Home</a>
           <a title="File a complaint"  class="loginlogoutlink-login" href="add_complain">File a Complaint</a>
           {% if request.user.is_authenticated == False %}          
-              <a title="Log In" class="loginlogoutlink-login" href="/">Log In</a>
+              <a title="Log In" class="loginlogoutlink-login" href="/login">Login</a>
           {% else %}
-              <a title="Log Out" class="loginlogoutlink-logout" href="/logout">Log Out</a>
+              <a title="Log Out" class="loginlogoutlink-logout" href="/logout">Logout</a>
           {% endif %}
       </div>
-        <div class="dropdown">
+        <!-- <div class="dropdown">
         <button class="dropbtn" onclick="myFunction()">Filter Category
           <i class="fa fa-caret-down"></i>
         </button>
@@ -41,14 +40,14 @@
           <button id="start_time" onclick="btn_onClick_StartTime()">Start Time</button>
           <button id="own_complains" onclick="btn_onClick_owncomp()">My Complaints</button>
         </div>
-        </div> 
+        </div>  -->
       </div>
 
       <!-- Location Modal -->
-      <div id="locationModal" class="modal">
+      <!-- <div id="locationModal" class="modal"> -->
 
         <!-- Modal content -->
-        <div class="modal-content">
+        <!-- <div class="modal-content">
           <div class="modal-header">
             <span class="close">&times;</span>
             <h2 id="modal_h2"></h2>
@@ -62,26 +61,49 @@
           </div>
         </div>
       
-      </div>
+      </div> -->
 
       <!-- Infinte Scroll Starts -->
+      
+      <form action="complains" method="post" style = "padding:1cm;">
+        {% csrf_token %}
+        <label for="region"> Region:</label>
+        <input id="region" name = "region"  type="text"/> &nbsp;&nbsp;&nbsp;
+        <label for="city"> City:</label>
+        <input id="city" name = "city" type="text"/> &nbsp;&nbsp;&nbsp;
+        <label for="state"> State:</label>
+        <input id="state" name = "state" type="text"/> <br>
+        <label for="time"> Posted within: </label>
+        <select name="time" id="time">
+          <option value = "--select"> --select </option>
+          <option value = "showall"> Show all </option>
+          <option value = "1week"> 1 Week </option>
+          <option value = "15days"> 15 days </option>
+          <option value = "1month"> 1 month </option>
+          <option value = "6months"> 6 months </option>
+          <option value = "1year"> 1 Year </option>
+        </select><br>
+        <input type="checkbox" id="myOnly" name="myOnly" value="True">
+        <label for="myOnly"> Only My complins </label><br>
+        <input type="submit" value="Filter complinats"></imput><br>
+        <input type="submit" value="Reset Filter"></imput>
+      </form>
 
       <div class="container" id="container">
         <h1>Complaints</h1>
       </div>
-        
+      
       <br>
       <div class="container" id="container">
-          <h2>{{empty}}</h2>
-      </div>
-      
+        <h2>{{empty}}</h2>
+      </div>      
       <div class="loading">
         <div class="ball"></div>
         <div class="ball"></div>
         <div class="ball"></div>
       </div>
-
+      
       <div class="fab" onclick="fab_onClick()"> + </div>
-
+      
 </body>
 </html>

@@ -18,7 +18,6 @@
     <link rel="stylesheet" href="{% static '/styles/home/style.css' %}">
 </head>
 <script>
-    console.log("{{request.user.username}}");
 </script>
 <body>
     <section>
@@ -34,13 +33,13 @@
         </nav> -->
 
         <div class="navbar">
-            <a href="/" style="font-size: 50px;">Inform-2-Address</a> 
+            <a href="" style="font-size: 50px;">Inform-2-Address</a> 
             <div class="loginlogout">
-                <a title="Home"  href="/citizen">Home</a>
+                <a title="Home" class="loginlogoutlink-login" href="/citizen">Home</a>
                 {% if request.user.is_authenticated == False %}          
-                    <a title="Log In" class="loginlogoutlink-login" href="/">Log In</a>
+                    <a title="Log In" class="loginlogoutlink-login" href="/login">Login</a>
                 {% else %}
-                    <a title="Log Out" class="loginlogoutlink-logout" href="/logout">Log Out</a>
+                    <a title="Log Out" class="loginlogoutlink-logout" href="/logout">Logout</a>
                 {% endif %}
             </div>
         </div>
@@ -65,7 +64,7 @@
                 <div class="col-lg-3">
                     <img src="{% static 'images/blue.png' %} " class="img-thumbnail img-margin">
                     <div class="carousel-caption banner-text">
-                        <label><a href="support/complains" class="nav-link bg-w">Support</a></label>
+                        <label><a href="/citizen/support/complains" class="nav-link bg-w">Support</a></label>
                     </div>
                 </div>
                 <div class="col-lg-3">

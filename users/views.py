@@ -1,10 +1,12 @@
 from email import message
+from tracemalloc import start
 from django.contrib import messages
 from operator import mod
 import re
 from django.shortcuts import render, HttpResponse,redirect
 from decouple import config
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from django.contrib.auth.models import Group, User
 from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
 import psycopg2
@@ -33,7 +35,7 @@ def logout(request):
         auth_logout(request)
         messages.success(request, "Good bye ! You are logged out now")
 
-    return redirect("/")
+    return redirect("/login")
 
 def show_categories(request):
     
@@ -84,8 +86,9 @@ def show_categories(request):
         
         print(request.GET.get('next'))
 
+        conn.close()
+        
         if user is not None:
-            conn.close()
             model_user = User.objects.filter(username=mobile)
 
             if model_user.count() == 0:
@@ -108,6 +111,7 @@ def show_categories(request):
                 return render(request, "login.html")
         
         else:
+
             messages.error(request, "Invalid credentials")
             return render(request, "login.html")
 
@@ -116,36 +120,68 @@ def show_categories(request):
 
 def categorywise_complaints(request, category):
 
+    state = "%"
+    city = "%"
+    region = "%"
+    user_mobile_number = "%"
+    start_date = datetime.now() + relativedelta(months=-3)
+    filtered = False
+
+    if request.method == "POST":
+        filtered = True
+        if request.POST.get('state') != "":
+            state = request.POST.get('state')
+        if request.POST.get('city') != "":
+            city = request.POST['city']
+        if request.POST.get('region') != "":
+            region = request.POST['region']
+        if request.POST.get('myOnly'):
+           user_mobile_number = request.user.username
+        
+        time = request.POST['time']
+
+        if time == "1week":
+            start_date = datetime.now() + relativedelta(days=-7)
+        elif time == "15days":
+            start_date = datetime.now() + relativedelta(days=-15)
+        elif time == "1month":
+            start_date = datetime.now() + relativedelta(months=-1)
+        elif time == "6months":
+            start_date = datetime.now() + relativedelta(months=-6)
+        elif time == "1year":
+            start_date = datetime.now() + relativedelta(years=-1)
+        elif time == "showall":
+            start_date = datetime.now() + relativedelta(years=-1)
+        
+    print(state, city, region, user_mobile_number, start_date)
     conn = connect()
     c = conn.cursor()
 
     c.execute(f'''
         SELECT *
         FROM my_db.complains
-        WHERE lower(department) = lower('{category}')
+        WHERE lower(department) = lower('{category}') and state LIKE '{state}' and city LIKE '{city}' and region LIKE '{region}' and user_mobile_number LIKE '{user_mobile_number}' and start_time > '{start_date}'
     ''')
-
+    
     colnames = [desc[0] for desc in c.description]
 
     complains = c.fetchall()
     complains = [dict(zip(colnames, complain)) for complain in complains]
-
+    
+    empty = "There are no complains with given category"
+    if complains.__len__() != 0:
+        empty = ""
+    
     complains = json.dumps(complains, indent=4, sort_keys=True, default=str)
     conn.close()
 
-    empty = "There are no complains with given category"
-
-    if complains.__len__() == 0:
-        empty = ""
-
-    return render(request, "complains.html", {"complains" : complains, "empty" : empty})
-
+    return render(request, "complains.html", {"complains" : complains, "empty" : empty, "filtered":filtered})
 
 def add_complain(request, category):
 
     if request.user.is_authenticated == False:
         messages.error(request, 'Login first to file a complaint')
-        return redirect("/")
+        return redirect("/login")
     
     if request.method == "POST":
         text = request.POST.get('details')
@@ -177,7 +213,7 @@ def upvote_complain(request, category, id):
     
     if request.user.is_authenticated == False:
         messages.error(request, "Login to upvote a complain")
-        return redirect("/")
+        return redirect("/login")
 
     conn = connect()
     c = conn.cursor()

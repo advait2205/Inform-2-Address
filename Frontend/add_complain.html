@@ -233,14 +233,14 @@
   </head>
   <body>
     <div class="navbar">
-      <a href="/" style="font-size: 30px;">Inform-2-Address</a> 
+      <a href="/citizen" style="font-size: 30px;">Inform-2-Address</a> 
       <div class="loginlogout">
         <a title="Home" class="loginlogoutlink-login" href="/citizen">Home</a>
         <a title="File a complaint"  class="loginlogoutlink-login" href="add_complain">File a Complaint</a>
         {% if request.user.is_authenticated == False %}          
-            <a title="Log In" class="loginlogoutlink-login" href="/">Log In</a>
+            <a title="Log In" class="loginlogoutlink-login" href="/login">Login</a>
         {% else %}
-            <a title="Log Out" class="loginlogoutlink-logout" href="/logout">Log Out</a>
+            <a title="Log Out" class="loginlogoutlink-logout" href="/logout">Logout</a>
         {% endif %}
       </div>
   </div>

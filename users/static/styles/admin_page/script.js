@@ -55,9 +55,9 @@ function addDataToDOM(data) {
   const postElement = document.createElement('div');
   postElement.classList.add('blog-post');
   postElement.innerHTML = `
-    <h2 class="title">${"State: "+  data.state + ", City: " + data.city + ", Region: " + data.region}</h2>
     <img class="post_image" src="${data.image_url}">
     <p class="text">${data.text}</p>
+    <h4 class="date">${data.region + ", " + data.city + ", " + data.state}</h4>
     <p class="date">${"Posted on: " + data.start_time.substring(0,10)}
     &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;${"Expected Resolve Date: " + data.end_time.substring(0,10)}
     &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;${"Upvotes: " + data.upvotes}</p>
