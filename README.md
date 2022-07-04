@@ -20,7 +20,7 @@ Features Implemented till now:
 - Manage Authority
 - Allow Admin to view particular Authority statistics
 - Script done to post complaint alongwith image and description to Telegram Group
+- Succesfully allow software to asynchronously post to Telegram using Script
 
 Features to-be implemented:
 - Solve Image Storage Issue
-- Succesfully allow software to asynchronously post to Telegram using Script
