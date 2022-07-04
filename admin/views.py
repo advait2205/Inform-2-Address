@@ -28,9 +28,8 @@ def get_statistics(request, mobile):
     region = "%"
     start_date = datetime.now() + relativedelta(months=-3)
     end_date = start_date
-
+    
     if request.method == "POST":
-        print(request.POST.get('state'), request.POST.get('city'), request.POST.get('region'))
         if request.POST.get('state') != "":
             state = request.POST.get('state')
         if request.POST.get('city') != "":
@@ -60,7 +59,7 @@ def get_statistics(request, mobile):
 
     c.execute(f'''
         SELECT * 
-        FROM my_db."authority "
+        FROM my_db."authority"
         where mobile_number = '{mobile}'
     ''')
 
@@ -78,7 +77,7 @@ def get_statistics(request, mobile):
     c.execute(f'''
         SELECT *
         FROM my_db.complains
-        WHERE resolve_authority_number = '{mobile}' and state LIKE '{state}' and city LIKE '{city}' and region LIKE '{region}' and start_time > '{start_date}' and end_time > '{end_date}' 
+        WHERE resolve_authority_number = '{mobile}' and state LIKE '{state}' and city LIKE '{city}' and region LIKE '{region}' and start_time > '{start_date}' and end_time > '{end_date}'
     ''')
 
     colnames = [desc[0] for desc in c.description]
@@ -91,7 +90,7 @@ def get_statistics(request, mobile):
     
     return render(request, "admin_page.html", {"authority":authority, "complains": complains})
 
-def get_mobile(request):
+def get_statistics_util(request):
 
     # auth_logout(request)
     if request.user.is_authenticated == False:
@@ -101,10 +100,44 @@ def get_mobile(request):
     if not User.objects.get(username=request.user.username).groups.all().filter(name='admin'):
         return handler404(request)
     
+    state = "%"
+    city = "%"
+    region = "%"
+    position = "%"
+
     if request.method == "POST":
-        mobile = request.POST.get('mobile')
-        print(mobile)
-        return redirect(request.path+f"{mobile}")
+        if request.POST.get('state') != "":
+            state = request.POST.get('state')
+        if request.POST.get('city') != "":
+            city = request.POST['city']
+        if request.POST.get('region') != "":
+            region = request.POST['region']
+        if request.POST.get('position') != "":
+            position = "%" + request.POST['position'] + "%"
+        
+        conn = connect()
+        c = conn.cursor()
+
+        c.execute(f'''
+            SELECT * 
+            FROM my_db."authority"
+            where lower(region) like '{region.lower()}' and lower(city) like '{city.lower()}' and lower(state) like '{state.lower()}' and lower(position) like '{position}'
+        ''')
+
+        colnames = [desc[0] for desc in c.description]
+
+        authorities = c.fetchall()
+
+        if authorities is None:
+            conn.close()
+            messages.error(request, 'No user with given filter')
+            return render(request, "admin_page.html")
+
+        authorities = [dict(zip(colnames, authority)) for authority in authorities]
+        
+        conn.close()
+
+        return render(request, "admin_page.html", {"authorities" : authorities})
 
     return render(request, "admin_page.html")
 
@@ -140,7 +173,59 @@ def add_authority(request):
             
     return render(request, "add_authority.html")
 
-def manage_category(request):
+def manage_category_util(request):
+    if request.user.is_authenticated == False:
+        messages.error(request, 'Login to proceed further')
+        return redirect("/login")
+
+    if not User.objects.get(username=request.user.username).groups.all().filter(name='admin'):
+        return handler404(request)
+    
+    state = "%"
+    city = "%"
+    region = "%"
+    position = "%"
+
+    if request.method == "POST":
+        if request.POST.get('state') != "":
+            state = request.POST.get('state')
+        if request.POST.get('city') != "":
+            city = request.POST['city']
+        if request.POST.get('region') != "":
+            region = request.POST['region']
+        if request.POST.get('position') != "":
+            position = "%" + request.POST['position'] + "%"
+        
+        print(position)
+        conn = connect()
+        c = conn.cursor()
+
+        c.execute(f'''
+            SELECT * 
+            FROM my_db."authority"
+            where lower(region) like '{region.lower()}' and lower(city) like '{city.lower()}' and lower(state) like '{state.lower()}' and lower(position) like '{position}'
+        ''')
+
+        colnames = [desc[0] for desc in c.description]
+
+        authorities = c.fetchall()
+
+        if authorities is None:
+            conn.close()
+            messages.error(request, 'No user with given filter')
+            return render(request, "admin_page.html")
+
+        authorities = [dict(zip(colnames, authority)) for authority in authorities]
+        print(authorities)
+
+        conn.close()
+        
+        return render(request, "manage_category.html", {"authorities": authorities})
+
+    return render(request, "manage_category.html")
+        
+
+def manage_category(request, mobile):
 
     if request.user.is_authenticated == False:
         messages.error(request, 'Login to proceed further')
@@ -149,36 +234,51 @@ def manage_category(request):
     if not User.objects.get(username=request.user.username).groups.all().filter(name='admin'):
         return handler404(request)
     
-
     conn = connect()
     c = conn.cursor()
 
+    c.execute(f'''
+        SELECT * 
+        FROM my_db."authority"
+        where mobile_number = '{mobile}'
+    ''')
+
+    colnames = [desc[0] for desc in c.description]
+
+    authority = c.fetchone()
+
+    if authority is None:
+        conn.close()
+        messages.error(request, 'No user with given username')
+        return render(request, "admin_page.html")
+
+    authority = dict(zip(colnames, authority))
+    
     if request.method == "POST":
-        mobile = request.POST['mobile']
         category = request.POST['category']
         submit = request.POST['submit']
         print(mobile, category, submit)
 
         c.execute(f'''
             select *
-            from my_db."authority "
+            from my_db."authority"
             where mobile_number = '{mobile}'
         ''')
 
         colnames = [desc[0] for desc in c.description]
         user = c.fetchone()
+        user = dict(zip(colnames, user))
         
         if user is None:
             messages.error(request, "No user with given id")
         else:
-            user = dict(zip(colnames, user))
-
+            
             if submit == "Add to the Category":
                 if category == user['department']:
                     messages.error(request, "Given user is already in the category " + user['department'])
                 else:
                     c.execute(f'''
-                        UPDATE my_db."authority "
+                        UPDATE my_db."authority"
                         SET department = '{category}'
                         where mobile_number = '{mobile}'
                     ''')
@@ -189,11 +289,12 @@ def manage_category(request):
                     messages.error(request, "Given user is in the given category " +user['department'])
                 else:
                     c.execute(f'''
-                        UPDATE my_db."authority "
+                        UPDATE my_db."authority"
                         SET department = 'Not assigned'
                         where mobile_number = '{mobile}'
                     ''')
                     messages.success(request, "Authority removed from department")
+
 
     c.execute(f'''
         select distinct department
@@ -202,5 +303,18 @@ def manage_category(request):
 
     categories = c.fetchall()
     categories = [t[0] for t in categories]
+    
+    c.execute(f'''
+        select *
+        from my_db."authority"
+        where mobile_number = '{mobile}'
+    ''')
 
-    return render(request, "manage_category.html", {"categories": categories})
+    colnames = [desc[0] for desc in c.description]
+    user = c.fetchone()
+    user = dict(zip(colnames, user))
+    
+    conn.commit()
+    conn.close()
+
+    return render(request, "manage_category.html", {"authority": user, "categories": categories})

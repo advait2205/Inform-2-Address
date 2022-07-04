@@ -54,13 +54,6 @@
   <h1>Authority Statistics</h1>
 
   <p class="heading">Enter the authority mobile number to get desired detials of authority</p>
-
-  <form class="form" id="getdetails_form" action="{{request.path}}" method="POST" style = "padding: 0 1cm;">
-    {% csrf_token %}
-    <input type="mobile" id="form_auth_number" name = "mobile"/>
-    <button type="submit"> Get details </button>
-  </form>
-
   {% for message in messages %}
 	<div class="alert {{ message.tags }} alert-dismissible" role="alert">
 		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -69,6 +62,26 @@
 		{{ message }}
 	</div>
 	{% endfor %}
+  
+  <h3> Enter the details to see the authority list</h3><br>
+  <form class="form" id="getdetails_form" action="/admin/statistics" method="POST" style = "padding: 0 1cm;">
+    {% csrf_token %}
+    <label for="region"> Region:</label>
+    <input id="region" name = "region"  type="text"/> &nbsp;&nbsp;&nbsp;
+    <label for="city"> City:</label>
+    <input id="city" name = "city" type="text"/> &nbsp;&nbsp;&nbsp;
+    <label for="state"> State:</label>
+    <input id="state" name = "state" type="text"/> <br>
+    <label for="position"> Position keyword:</label>
+    <input type="text" id="position" name = "position"/><br>
+    <button type="submit"> Get Authorities </button>
+  </form>
+
+  {% for authority in authorities %}
+    <div onclick="location.href='{{request.path}}/{{authority.mobile_number}}'">
+      {{authority.name}} &nbsp; {{authority.mobile_number}} &nbsp; {{authority.department}} &nbsp; {{authority.region}} &nbsp; {{authority.city}} &nbsp; {{authority.state}} &nbsp; {{authority.position}}
+    </div>
+  {% endfor %}
 
   {% if authority %}
     

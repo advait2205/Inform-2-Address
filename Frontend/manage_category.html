@@ -26,20 +26,43 @@
       </div>
     </div>
 
+    <br><br>
+    <form class="form" id="getdetails_form" action="/admin/manage_category" method="POST" style = "padding: 0 1cm;">
+      <h3> Enter the details to see the authority list</h3><br>
+      {% csrf_token %}
+      <label for="region"> Region:</label>
+      <input id="region" name = "region"  type="text"/> &nbsp;&nbsp;&nbsp;
+      <label for="city"> City:</label>
+      <input id="city" name = "city" type="text"/> &nbsp;&nbsp;&nbsp;
+      <label for="state"> State:</label>
+      <input id="state" name = "state" type="text"/> <br>
+      <label for="position"> Position keyword:</label>
+      <input type="text" id="position" name = "position"/><br>
+      <button type="submit"> Get Authorities </button>
+    </form>
+
+    {% for authority in authorities %}
+      <div onclick="location.href='{{request.path}}/{{authority.mobile_number}}'">
+        {{authority.name}} &nbsp; {{authority.mobile_number}} &nbsp; {{authority.department}} &nbsp; {{authority.region}} &nbsp; {{authority.city}} &nbsp; {{authority.state}} &nbsp; {{authority.position}}
+      </div>
+    {% endfor %}
+
+    {% if authority %}
+      
     <h1>Manage Authority</h1>
-      {% for message in messages %}
+    {% for message in messages %}
       <div class="alert {{ message.tags }} alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true">&times;</span>
         </button>
         {{ message }}
       </div>
       {% endfor %}
-    <p class="heading">Enter the details to add the authority to the category</p>
-    <form class="form" id="get_cat_form" action="manage_authority" method = "POST" style = "padding:0.5cm 1cm;">
-      {% csrf_token %}
-        <label for="mobile"> Authority ID:</label>
-        <input type="text" id="form_get_cat" name="mobile"/> &nbsp;&nbsp;&nbsp;&nbsp;
+      {{authority.name}} &nbsp; {{authority.mobile_number}} &nbsp; {{authority.department}} &nbsp; {{authority.region}} &nbsp; {{authority.city}} &nbsp; {{authority.state}} &nbsp; {{authority.position}}
+      
+      <p class="heading">Enter the details to add the authority to the category</p>
+      <form class="form" id="get_cat_form" action="{{request.path}}" method = "POST" style = "padding:0.5cm 1cm;">
+        {% csrf_token %}
         <label for="category"> category:</label>
         <select name="category" id="get_cat_form">
           {% for category in categories %}
@@ -49,13 +72,11 @@
         <br>
         <input type="submit" name="submit" value="Add to the Category" style = "margin:0.5cm 0;"/>
     </form>
-
+    
     <p class="heading">Enter the details to remove the authority from category</p>
-    <form class="form" id="get_cat_form" action="manage_authority" method = "POST" style = "padding:0.5cm 1cm;">
+    <form class="form" id="get_cat_form" action="{{request.path}}" method = "POST" style = "padding:0.5cm 1cm;">
       {% csrf_token %}
-        <label for="mobile"> Authority ID:</label>
-        <input type="text" id="form_get_cat" name="mobile"/> &nbsp;&nbsp;&nbsp;&nbsp;
-        <label for="category"> category:</label>
+      <label for="category"> category:</label>
         <select name="category" id="get_cat_form">
           {% for category in categories %}
           <option value="{{category}}">{{category}}</option>
@@ -63,6 +84,7 @@
         </select>
         <br>
         <input type="submit" name="submit" value="Remove from the Category"style = "margin:0.5cm 0;"/>
-    </form>
+      </form>
+      {% endif %}
 </body>
 </html>
