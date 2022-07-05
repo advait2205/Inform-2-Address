@@ -1,8 +1,13 @@
 import telepot
 import datetime
+<<<<<<< HEAD
 from decouple import config
 
 API_KEY = config('TELEGRAM_API_KEY')
+=======
+
+API_KEY = '5406037740:AAEglAO2q3zkKFxHXw17ia4vPFXMyuIp2FQ'
+>>>>>>> 0afcc794a9230d6f92cf91c82edce4318ceee3f1
 bot = telepot.Bot(API_KEY)
 # rec = "-1001762239055"
 
