@@ -163,7 +163,7 @@ def add_authority(request):
         c = conn.cursor()
 
         c.execute(f'''
-            INSERT INTO my_db."authority "(
+            INSERT INTO my_db."authority"(
                 name, mobile_number, department, region, city, state, password)
                 VALUES ('{name}', '{mobile}', '{department}', '{region}', '{city}', '{state}', '{password}');
         ''')

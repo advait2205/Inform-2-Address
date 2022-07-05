@@ -11,6 +11,7 @@ from django.contrib.auth.models import Group, User
 from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
 import psycopg2
 import json
+from users.send_message_telegram_group import send_message
 
 def handler404(request, *args, **argv):
     response = render(request, '404.html')
@@ -63,7 +64,7 @@ def show_categories(request):
 
             c.execute(f'''
                 SELECT *
-                FROM my_db."authority "
+                FROM my_db."authority"
                 WHERE mobile_number = '{mobile}' and password = '{password}'
             ''')
 
@@ -193,19 +194,33 @@ def add_complain(request, category):
         upvotes = 0
 
         # HAVE TO CHANGE THIS
-        resolve_authority_number = "214-224-1501" 
+        resolve_authority_number = "9687999393" 
         
         conn = connect()
         c = conn.cursor()
 
+        # c.execute(f'''
+        #     INSERT INTO my_db.complains(
+        #         text, image_url, start_time, end_time, user_mobile_number, department, region, city, state, resolve_authority_number, upvotes)
+        #         VALUES ('{text}', NULL, NOW(), NULL, '{user_mobile_number}', '{department}', '{region}', '{city}', '{state}', '{resolve_authority_number}', {upvotes});
+        # ''')
+
         c.execute(f'''
-            INSERT INTO my_db.complains(
-                text, image_url, start_time, end_time, user_mobile_number, department, region, city, state, resolve_authority_number, upvotes)
-                VALUES ('{text}', NULL, NOW(), NULL, '{user_mobile_number}', '{department}', '{region}', '{city}', '{state}', '{resolve_authority_number}', {upvotes});
+            SELECT * 
+            FROM my_db."authority"
+            where mobile_number = '{resolve_authority_number}'
         ''')
 
+        colnames = [desc[0] for desc in c.description]
+        authority = c.fetchone()
+        authority = dict(zip(colnames, authority))
+            
         conn.commit()
         conn.close()
+
+        send_message( authority["chat_id"] , "complaint title", text, "", region, city, resolve_authority_number)
+        
+
 
     return render(request, "add_complain.html")
 
