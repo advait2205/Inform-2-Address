@@ -4,7 +4,13 @@
 <html>
   <head>
     <title>
-      New Authority Registration</title>
+      {% if editing %}
+      Edit Authority details
+      {% else %}
+      New Authority Registration
+      
+      {% endif %}
+      </title>
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <style>
@@ -230,6 +236,25 @@
           /*height: 100px;
           width: 350px;*/
         }
+
+              
+table {
+  border: 2px black;
+  border-collapse: collapse;
+  width: 80%;
+  margin:auto;
+  margin-top: 1cm;
+  padding: 1cm 0 0 0;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {background-color: #f2f2f2;}
+
+    
     </style>
   </head>
   <body>
@@ -239,7 +264,8 @@
         <a title="Categories"  class="loginlogoutlink-login" href="/citizen/">Categories</a>
         <a title="Get Statistics"  class="loginlogoutlink-login" href="/admin/statistics">Get Statistics</a>
         <a title="Add authority"  class="loginlogoutlink-login" href="/admin/add_authority">Add authority</a>
-        <a title="manage category"  class="loginlogoutlink-login" href="/admin/manage_category">Manage Category</a>
+        <a title="Edit authority"  class="loginlogoutlink-login" href="/admin/edit_authority">Edit authority</a>
+      <a title="manage category"  class="loginlogoutlink-login" href="/admin/manage_category">Manage Category</a>
         {% if request.user.is_authenticated == False %}          
             <a title="Log In" class="loginlogoutlink-login" href="/login">Login</a>
         {% else %}
@@ -248,48 +274,104 @@
     </div>
   </div>
     
-    <div class="testbox">
-      <form action="add_authority" method = "POST">
+    {% if edit %}
+    <form class="form" id="getdetails_form" action="edit_authority" method="POST" style = "padding: .4cm 1cm; width:50%; margin: auto; margin-top: 1cm;">
+      <h3> Enter the details to see the authority list</h3><br>
+        {% csrf_token %}
+        <label for="region"> Region:</label>
+        <input id="region" name = "region"  type="text"/> &nbsp;&nbsp;&nbsp;
+        <label for="city"> City:</label>
+        <input id="city" name = "city" type="text"/> &nbsp;&nbsp;&nbsp;
+        <label for="state"> State:</label>
+        <input id="state" name = "state" type="text"/> <br>
+        <label for="position"> Position keyword:</label>
+        <input type="text" id="position" name = "position"/><br>
+        <button type="submit"> Get Authorities </button>
+      </form>
+    
+      {% if authorities %}
+      <table>
+        <tr>
+          <td> Name </td>
+          <td> Mobile </td>
+          <td> Region </td>
+          <td> City </td>
+          <td> State </td>
+          <td> Department </td>
+          <td> Position </td>
+          <td> </td>
+        </tr>
+        {% for authority in authorities %}
+        <tr>
+          <td>{{authority.name}}</td>
+          <td>{{authority.mobile_number}}</td>
+          <td>{{authority.region}}</td>
+          <td>{{authority.city}}</td>
+          <td>{{authority.state}}</td>
+          <td>{{authority.department}}</td>
+          <td>{{authority.position}}</td>
+          <td> <button onclick="location.href='{{request.path}}/{{authority.mobile_number}}'" value="edit_authority" name="submit"> Edit Authority </button> </td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% endif %}
+      
+      {% else %}
+      <div class="testbox">
+      <form action="/admin/add_authority" method = "POST">
         {% csrf_token %}
         <div class="banner">
-          <h1>New Authority Registration</h1>
+          <h1>
+            {% if editing %}
+        Edit Authority details
+        {% else %}
+        New Authority Registration
+        
+        {% endif %}
+        
+            </h1>
         </div>
         <div class="colums">
           <div class="item">
             <label for="name"> Name<span>*</span></label>
-            <input id="name" type="text" name="name" required/>
+            <input id="name" type="text" name="name" value="{{authority.name}}" required/>
           </div>
           <div class="item">
             <label for="mobile"> Mobile Number<span>*</span></label>
-            <input id="mobile" type="text" name="mobile" required/>
+            <input id="mobile" type="text" name="mobile" value="{{authority.mobile_number}}" required/>
           </div>
           <div class="item">
             <label for="department">Department<span>*</span></label>
-            <input id="department" type="text"   name="department" required/>
+            <input id="department" type="text"   name="department" value="{{authority.department}}" required/>
           </div>
           <div class="item">
             <label for="region">Region<span>*</span></label>
-            <input id="region" type="text"   name="region" required/>
+            <input id="region" type="text"   name="region" value="{{authority.region}}" required/>
           </div>
           <div class="item">
             <label for="city">City<span>*</span></label>
-            <input id="city" type="text"   name="city" required/>
+            <input id="city" type="text"   name="city" value="{{authority.city}}" required/>
           </div>
           <div class="item">
             <label for="state">State<span>*</span></label>
-            <input id="state" type="text" name="state" required/>
+            <input id="state" type="text" name="state" value="{{authority.state}}" required/>
+          </div>
+          <div class="item">
+            <label for="position">Position<span>*</span></label>
+            <input id="position" type="text" name="position" value="{{authority.position}}" required/>
           </div>
           <div class="item">
             <label for="Password">Password<span>*</span></label>
-            <input id="Password" type="text"   name="password" required/>
+            <input id="Password" type="text"   name="password" value="{{authority.password}}" required/>
           </div>
         </div>
         </div>
         
         <div class="btn-block">
-          <button type="submit" href="/">Submit</button>
+          <button type="submit" name="submit" value="add_authority">Submit</button>
         </div>
       </form>
     </div>
+    {% endif %}
   </body>
 </html>

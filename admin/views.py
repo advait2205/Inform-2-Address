@@ -1,3 +1,4 @@
+from re import sub
 from unicodedata import category
 from django.shortcuts import render,redirect
 from users.views import connect
@@ -90,7 +91,7 @@ def get_statistics(request, mobile):
     
     return render(request, "admin_page.html", {"authority":authority, "complains": complains})
 
-def get_statistics_util(request):
+def get_statistics(request):
 
     # auth_logout(request)
     if request.user.is_authenticated == False:
@@ -157,15 +158,24 @@ def add_authority(request):
         region = request.POST.get('region')
         city = request.POST.get('city')
         state = request.POST.get('state')
+        position = request.POST.get('position')
         password = request.POST.get('password')
+
+        print(name,mobile,department,region,city,state,password)
 
         conn = connect()
         c = conn.cursor()
 
         c.execute(f'''
+            DELETE from
+            my_db.authority
+            where mobile_number = '{mobile}'
+        ''')
+
+        c.execute(f'''
             INSERT INTO my_db."authority"(
-                name, mobile_number, department, region, city, state, password)
-                VALUES ('{name}', '{mobile}', '{department}', '{region}', '{city}', '{state}', '{password}');
+                name, mobile_number, department, region, city, state, password, position,chat_id)
+                VALUES ('{name}', '{mobile}', '{department}', '{region}', '{city}', '{state}', '{password}', '{position}', '123456789');
         ''')
 
         conn.commit()
@@ -173,7 +183,96 @@ def add_authority(request):
             
     return render(request, "add_authority.html")
 
-def manage_category_util(request):
+def edit_authority(request):
+
+    if request.user.is_authenticated == False:
+        messages.error(request, 'Login to proceed further')
+        return redirect("/login")
+
+    if not User.objects.get(username=request.user.username).groups.all().filter(name='admin'):
+        return handler404(request)
+    
+    state = "%"
+    city = "%"
+    region = "%"
+    position = "%"
+
+    if request.method == "POST":
+        if request.POST.get('state') != "":
+            state = request.POST.get('state')
+        if request.POST.get('city') != "":
+            city = request.POST['city']
+        if request.POST.get('region') != "":
+            region = request.POST['region']
+        if request.POST.get('position') != "":
+            position = "%" + request.POST['position'] + "%"
+        
+        print(position)
+        conn = connect()
+        c = conn.cursor()
+
+        c.execute(f'''
+            SELECT * 
+            FROM my_db."authority"
+            where lower(region) like '{region.lower()}' and lower(city) like '{city.lower()}' and lower(state) like '{state.lower()}' and lower(position) like '{position}'
+        ''')
+
+        colnames = [desc[0] for desc in c.description]
+
+        authorities = c.fetchall()
+
+        if authorities is None:
+            conn.close()
+            messages.error(request, 'No user with given filter')
+            return redirect("/admin/edit_authority")
+
+        authorities = [dict(zip(colnames, authority)) for authority in authorities]
+        
+        conn.close()
+        
+        return render(request, "add_authority.html", {"edit":1, "authorities": authorities})
+        
+    return render(request, "add_authority.html", {"edit":1})
+
+def edit_authority_util(request, mobile):
+    
+    if request.user.is_authenticated == False:
+        messages.error(request, 'Login to proceed further')
+        return redirect("/login")
+
+    if not User.objects.get(username=request.user.username).groups.all().filter(name='admin'):
+        return handler404(request)
+    
+    conn = connect()
+    c = conn.cursor()
+
+    c.execute(f'''
+        SELECT * 
+        FROM my_db."authority"
+        where mobile_number = '{mobile}'
+    ''')
+
+    colnames = [desc[0] for desc in c.description]
+
+    authority = c.fetchone()
+
+    if authority is None:
+        conn.close()
+        messages.error(request, 'No user with given username')
+        return render(request, "admin_page.html")
+
+    authority = dict(zip(colnames, authority))
+    
+    if request.method == "POST":
+        submit = request.metho.get('submit')
+        if submit == "add_authority":
+            return redirect("/admin/add_authority")
+
+    print(authority)
+
+    return render(request, "add_authority.html", {"authority": authority, "editing":1})
+
+def manage_category(request):
     if request.user.is_authenticated == False:
         messages.error(request, 'Login to proceed further')
         return redirect("/login")
@@ -225,7 +324,7 @@ def manage_category_util(request):
     return render(request, "manage_category.html")
         
 
-def manage_category(request, mobile):
+def manage_category_util(request, mobile):
 
     if request.user.is_authenticated == False:
         messages.error(request, 'Login to proceed further')
