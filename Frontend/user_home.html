@@ -38,6 +38,7 @@
                 <a title="Home" class="loginlogoutlink-login" href="/citizen">Home</a>
                 {% if request.user.is_authenticated == False %}          
                     <a title="Log In" class="loginlogoutlink-login" href="/login">Login</a>
+                    <a title="Sign Up" class="loginlogoutlink-logout" href="/signup">Signup</a>
                 {% else %}
                     <a title="Log Out" class="loginlogoutlink-logout" href="/logout">Logout</a>
                 {% endif %}
@@ -60,83 +61,22 @@
                     <h1 class="h-center">Categories</h1>
                 </div>
             </div>
-            <div class="row">
+            {% for category in categories %}
+                {% if forloop.counter0|divisibleby:4 %}
+                    <div class="row">
+                {% endif %}
+
                 <div class="col-lg-3">
                     <img src="{% static 'images/blue.png' %} " class="img-thumbnail img-margin">
                     <div class="carousel-caption banner-text">
-                        <label><a href="/citizen/support/complains" class="nav-link bg-w">Support</a></label>
+                        <label><a href="/citizen/{{category}}/complains" class="nav-link bg-w">{{category}}</a></label>
                     </div>
                 </div>
-                <div class="col-lg-3">
-                    <img src="{% static 'images/blue.png' %}" class="img-thumbnail img-margin">
-                    <div class="carousel-caption banner-text">
-                        <label><a href="#" class="nav-link bg-w">Category2</a></label>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <img src="{% static 'images/blue.png' %}" class="img-thumbnail img-margin">
-                    <div class="carousel-caption banner-text">
-                        <label><a href="#" class="nav-link bg-w">Category3</a></label>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <img src="{% static 'images/blue.png' %}" class="img-thumbnail img-margin">
-                    <div class="carousel-caption banner-text">
-                        <label><a href="#" class="nav-link bg-w">Category4</a></label>
-                    </div>
-                </div>
-                <!-- <div class="col-lg-3">
-                    <img src="{% static 'images/blue.png' %}" class="img-thumbnail img-margin">
-                    <div class="carousel-caption banner-text">
-                        <label><a href="#" class="nav-link bg-w">Category5</a></label>
-                    </div>
-                </div>
-                <div class="col-lg-2">
-                    <img src="{% static 'images/blue.png' %}" class="img-thumbnail img-margin">
-                    <div class="carousel-caption banner-text">
-                        <label><a href="#" class="nav-link bg-w">Category 6</a></label>
-                    </div>
-                </div> -->
-            </div>
 
-            <div class="row">
-                <div class="col-lg-3">
-                    <img src="{% static 'images/blue.png' %}" class="img-thumbnail img-margin">
-                    <div class="carousel-caption banner-text">
-                        <label><a href="#" class="nav-link bg-w">Category 7</a></label>
+                {% if forloop.counter|divisibleby:4 %}
                     </div>
-                </div>
-                <div class="col-lg-3">
-                    <img src="{% static 'images/blue.png' %}" class="img-thumbnail img-margin">
-                    <div class="carousel-caption banner-text">
-                        <label><a href="#" class="nav-link bg-w">Category 8</a></label>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <img src="{% static 'images/blue.png' %}" class="img-thumbnail img-margin">
-                    <div class="carousel-caption banner-text">
-                        <label><a href="#" class="nav-link bg-w">Category 9</a></label>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <img src="{% static 'images/blue.png' %}" class="img-thumbnail img-margin">
-                    <div class="carousel-caption banner-text">
-                        <label><a href="#" class="nav-link bg-w">Category 10</a></label>
-                    </div>
-                </div>
-                <!-- <div class="col-lg-2">
-                    <img src="{% static 'images/blue.png' %}" class="img-thumbnail img-margin">
-                    <div class="carousel-caption banner-text">
-                        <label><a href="#" class="nav-link bg-w">Category 11</a></label>
-                    </div>
-                </div>
-                <div class="col-lg-2">
-                    <img src="{% static 'images/blue.png' %}" class="img-thumbnail img-margin">
-                    <div class="carousel-caption banner-text">
-                        <label><a href="#" class="nav-link bg-w">Category 12</a></label>
-                    </div>
-                </div> -->
-            </div>
+                {% endif %}
+            {% endfor %}
         </div>
     </section>
 
