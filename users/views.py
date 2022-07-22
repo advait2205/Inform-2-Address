@@ -1,9 +1,6 @@
-from email import message
-from tracemalloc import start
 from django.contrib import messages
 from operator import mod
-import re
-from django.shortcuts import render, HttpResponse,redirect
+from django.shortcuts import render,redirect
 from decouple import config
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -37,6 +34,29 @@ def logout(request):
         messages.success(request, "Good bye ! You are logged out now")
 
     return redirect("/login")
+
+def signup(request):
+
+    if request.method == "POST":
+        name = request.POST.get('name')
+        mobile = request.POST.get('mobile')
+        region = request.POST.get('region')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+        password = request.POST.get('password')
+
+        conn = connect()
+        c = conn.cursor()
+
+        c.execute(f'''
+            INSERT INTO my_db.user
+            values ('{name}', '{region}', '{city}', '{state}','{mobile}','{password}')
+        ''')
+
+        conn.commit()
+        conn.close()
+
+    return render(request, "user_signup.html")
 
 def show_categories(request):
     
@@ -85,8 +105,6 @@ def show_categories(request):
             groupName = "citizen"
             next = "/citizen/"
         
-        print(request.GET.get('next'))
-
         conn.close()
         
         if user is not None:
@@ -116,7 +134,20 @@ def show_categories(request):
             messages.error(request, "Invalid credentials")
             return render(request, "login.html")
 
-    return render(request, "user_home.html")
+    conn = connect()
+    c = conn.cursor()
+
+    c.execute(f'''
+        SELECT distinct lower(department)
+        from my_db.complains
+    ''')
+
+    categories = c.fetchall()
+    categories = [category[0] for category in categories]
+
+    conn.close()
+        
+    return render(request, "user_home.html", {'categories':categories})
 
 
 def categorywise_complaints(request, category):
@@ -154,14 +185,14 @@ def categorywise_complaints(request, category):
         elif time == "showall":
             start_date = datetime.now() + relativedelta(years=-1)
         
-    print(state, city, region, user_mobile_number, start_date)
     conn = connect()
     c = conn.cursor()
-
+    
     c.execute(f'''
         SELECT *
         FROM my_db.complains
-        WHERE lower(department) = lower('{category}') and state LIKE '{state}' and city LIKE '{city}' and region LIKE '{region}' and user_mobile_number LIKE '{user_mobile_number}' and start_time > '{start_date}'
+#HERE
+        WHERE lower(department) = lower('{category}') and state LIKE '{state}' and city LIKE '{city}' and region LIKE '{region}' and (user_mobile_number is NULL or user_mobile_number = '{user_mobile_number}') and start_time > '{start_date}'
     ''')
     
     colnames = [desc[0] for desc in c.description]
@@ -169,6 +200,8 @@ def categorywise_complaints(request, category):
     complains = c.fetchall()
     complains = [dict(zip(colnames, complain)) for complain in complains]
     
+    print(complains[0])
+
     empty = "There are no complains with given category"
     if complains.__len__() != 0:
         empty = ""
@@ -193,32 +226,48 @@ def add_complain(request, category):
         state = request.POST.get('state')
         upvotes = 0
 
-        # HAVE TO CHANGE THIS
-        resolve_authority_number = "9687999393" 
         
         conn = connect()
         c = conn.cursor()
+        
+        c.execute(f'''
+            SELECT mobile_number
+            FROM my_db."authority"
+            where region = '{region}' and city = '{city}' and state = '{state}'
+        ''')
 
-        # c.execute(f'''
-        #     INSERT INTO my_db.complains(
-        #         text, image_url, start_time, end_time, user_mobile_number, department, region, city, state, resolve_authority_number, upvotes)
-        #         VALUES ('{text}', NULL, NOW(), NULL, '{user_mobile_number}', '{department}', '{region}', '{city}', '{state}', '{resolve_authority_number}', {upvotes});
-        # ''')
+        authority_number = c.fetchone()
+
+        if authority_number is None:
+            authority_number = '9687999393'
+        else:
+            authority_number = authority_number[0]
+
+        c.execute(f'''
+            INSERT INTO my_db.complains(
+                text, image_url, start_time, end_time, user_mobile_number, department, region, city, state, resolve_authority_number, upvotes)
+                VALUES ('{text}', NULL, NOW(), NULL, '{user_mobile_number}', '{department}', '{region}', '{city}', '{state}', '{authority_number}', {upvotes});
+        ''')
+
+
+        
+        # HAVE TO CHANGE THIS
+        dummy_number = "9687999393" 
 
         c.execute(f'''
             SELECT * 
             FROM my_db."authority"
-            where mobile_number = '{resolve_authority_number}'
+            where mobile_number = '{dummy_number}'
         ''')
 
         colnames = [desc[0] for desc in c.description]
         authority = c.fetchone()
         authority = dict(zip(colnames, authority))
-            
+
         conn.commit()
         conn.close()
 
-        send_message( authority["chat_id"] , "complaint title", text, "", region, city, resolve_authority_number)
+        send_message( authority["chat_id"] , "complaint title", text, "", region, city,dummy_number)
         
 
 

@@ -34,6 +34,21 @@
     .loginlogout{
       float: right;
     }
+    
+table {
+  border-collapse: collapse;
+  width: 80%;
+  margin:auto;
+  margin-top: 1cm;
+  padding: 1cm 0 0 0;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {background-color: #f2f2f2;}
   </style>
 <body>
   <div class="navbar">
@@ -53,7 +68,6 @@
 
   <h1>Authority Statistics</h1>
 
-  <p class="heading">Enter the authority mobile number to get desired detials of authority</p>
   {% for message in messages %}
 	<div class="alert {{ message.tags }} alert-dismissible" role="alert">
 		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -77,11 +91,32 @@
     <button type="submit"> Get Authorities </button>
   </form>
 
-  {% for authority in authorities %}
-    <div onclick="location.href='{{request.path}}/{{authority.mobile_number}}'">
-      {{authority.name}} &nbsp; {{authority.mobile_number}} &nbsp; {{authority.department}} &nbsp; {{authority.region}} &nbsp; {{authority.city}} &nbsp; {{authority.state}} &nbsp; {{authority.position}}
-    </div>
-  {% endfor %}
+  {% if authorities %}
+  <table>
+    <tr>
+      <td> Name </td>
+      <td> Mobile </td>
+      <td> Region </td>
+      <td> City </td>
+      <td> State </td>
+      <td> Department </td>
+      <td> Position </td>
+      <td> </td>
+    </tr>
+    {% for authority in authorities %}
+    <tr>
+      <td>{{authority.name}}</td>
+      <td>{{authority.mobile_number}}</td>
+      <td>{{authority.region}}</td>
+      <td>{{authority.city}}</td>
+      <td>{{authority.state}}</td>
+      <td>{{authority.department}}</td>
+      <td>{{authority.position}}</td>
+      <td> <button onclick="location.href='{{request.path}}/{{authority.mobile_number}}'"> Get Details </button> </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% endif %}
 
   {% if authority %}
     
@@ -122,6 +157,10 @@
     </tr> -->
   </table>
 
+  <div class="container" id="container" style="padding:1cm 0 0 0">
+    <h1>Complaints</h1>
+  </div>
+  
   <!-- Infinte Scroll Starts -->
   <form action="{{request.path}}" method="post" style = "padding:1cm;">
     {% csrf_token %}
@@ -146,9 +185,6 @@
     <input type="submit" value="Reset filter"></imput>
   </form>
 
-  <div class="container" id="container">
-    <h1>Complaints</h1>
-  </div>
     
   <br>
   <div class="container" id="container">

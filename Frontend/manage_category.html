@@ -9,6 +9,25 @@
     <script src="{% static '/styles/manage_authority/script.js' %}" defer></script>
     <link rel="shortcut icon" href="#">
     <link rel="stylesheet" href="{% static 'styles/manage_authority/style.css' %}">
+    <style>
+          
+table {
+  border: 2px black;
+  border-collapse: collapse;
+  width: 80%;
+  margin:auto;
+  margin-top: 1cm;
+  padding: 1cm 0 0 0;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {background-color: #f2f2f2;}
+
+    </style>
 </head>
 <body>
     <div class="navbar">
@@ -41,12 +60,32 @@
       <button type="submit"> Get Authorities </button>
     </form>
 
+    {% if authorities %}
+  <table>
+    <tr>
+      <td> Name </td>
+      <td> Mobile </td>
+      <td> Region </td>
+      <td> City </td>
+      <td> State </td>
+      <td> Department </td>
+      <td> Position </td>
+      <td> </td>
+    </tr>
     {% for authority in authorities %}
-      <div onclick="location.href='{{request.path}}/{{authority.mobile_number}}'">
-        {{authority.name}} &nbsp; {{authority.mobile_number}} &nbsp; {{authority.department}} &nbsp; {{authority.region}} &nbsp; {{authority.city}} &nbsp; {{authority.state}} &nbsp; {{authority.position}}
-      </div>
+    <tr>
+      <td>{{authority.name}}</td>
+      <td>{{authority.mobile_number}}</td>
+      <td>{{authority.region}}</td>
+      <td>{{authority.city}}</td>
+      <td>{{authority.state}}</td>
+      <td>{{authority.department}}</td>
+      <td>{{authority.position}}</td>
+      <td> <button onclick="location.href='{{request.path}}/{{authority.mobile_number}}'"> Manage category </button> </td>
+    </tr>
     {% endfor %}
-
+  </table>
+  {% endif %}
     {% if authority %}
       
     <h1>Manage Authority</h1>
@@ -58,8 +97,42 @@
         {{ message }}
       </div>
       {% endfor %}
-      {{authority.name}} &nbsp; {{authority.mobile_number}} &nbsp; {{authority.department}} &nbsp; {{authority.region}} &nbsp; {{authority.city}} &nbsp; {{authority.state}} &nbsp; {{authority.position}}
       
+      <table>
+        <tr>
+          <td>Authority Name</td>
+          <td id="auth_name">{{authority.name}}</td>
+        </tr>
+        <tr>
+          <td>Authority Mobile Number</td>
+          <td id="auth_mob_num">{{authority.mobile_number}}</td>
+        </tr>
+        <tr>
+          <td>Authority Department</td>
+          <td id="auth_dept">{{authority.department}}</td>
+        </tr>
+        <tr>
+          <td>Authority State</td>
+          <td id="auth_state">{{authority.state}}</td>
+        </tr>
+        <tr>
+          <td>Authority City</td>
+          <td id="auth_city">{{authority.city}}</td>
+        </tr>
+        <tr>
+          <td>Authority Region</td>
+          <td id="auth_region">{{authority.region}}</td>
+        </tr>
+        <!-- <tr>
+          <td>Authority Total Complains Resolved</td>
+          <td id="auth_tot_res"></td>
+        </tr>
+        <tr>
+          <td>Authority Total Complains Unresolved</td>
+          <td id="auth_tot_unres"></td>
+        </tr> -->
+      </table>
+    
       <p class="heading">Enter the details to add the authority to the category</p>
       <form class="form" id="get_cat_form" action="{{request.path}}" method = "POST" style = "padding:0.5cm 1cm;">
         {% csrf_token %}
@@ -73,17 +146,10 @@
         <input type="submit" name="submit" value="Add to the Category" style = "margin:0.5cm 0;"/>
     </form>
     
-    <p class="heading">Enter the details to remove the authority from category</p>
+    <p class="heading">Press the button to remove the authority from category</p>
     <form class="form" id="get_cat_form" action="{{request.path}}" method = "POST" style = "padding:0.5cm 1cm;">
       {% csrf_token %}
-      <label for="category"> category:</label>
-        <select name="category" id="get_cat_form">
-          {% for category in categories %}
-          <option value="{{category}}">{{category}}</option>
-          {% endfor %}
-        </select>
-        <br>
-        <input type="submit" name="submit" value="Remove from the Category"style = "margin:0.5cm 0;"/>
+      <input type="submit" name="submit" value="Remove from the Category"style = "margin:0.5cm 0;"/>
       </form>
       {% endif %}
 </body>

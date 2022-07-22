@@ -1,13 +1,14 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Add New Complain</title>
+    <title>User SignUp</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <style>
-      
+      html, body {
+      min-height: 100%;
+      }
       body, div, form, input, select, textarea, label, p { 
       padding: 0;
       margin: 0;
@@ -17,46 +18,19 @@
       color: #666;
       line-height: 22px;
       }
-      html,body{
-        min-height: 100%;
-        margin:auto;
-        /* padding: auto; */
-      }
-
-      .navbar {
-
-    overflow: hidden;
-    background-color: #333;
-    font-family: Arial, Helvetica, sans-serif;
-  }
-  
-  .navbar a {
-    float: left;
-    font-size: 20px;
-    color: white;
-    text-align: center;
-    padding: 12px 14px;
-    text-decoration: none;
-  }
-
-    .loginlogout{
-      float: right;
-    }
       h1 {
       position: absolute;
       margin: 0;
       font-size: 40px;
-      color: #000000ce;
+      color: #fff;
       z-index: 2;
       line-height: 83px;
       }
-      textarea {  
+      textarea {
       width: calc(100% - 12px);
       padding: 5px;
       }
       .testbox {
-        width:60%;
-        margin:auto;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -64,7 +38,7 @@
       padding: 20px;
       }
       form {
-      width: 100%;
+      width: 70%;
       padding: 20px;
       border-radius: 6px;
       background: #fff;
@@ -72,7 +46,7 @@
       }
       .banner {
       position: relative;
-      height: 150px;
+      height: 300px;
       background-image: url("{% static "/images/background.jpg" %}");  
       background-size: cover;
       display: flex;
@@ -224,11 +198,26 @@
       padding-bottom:5px;
       }
       }
-      .comment {
-        resize: none;
-        /*height: 100px;
-        width: 350px;*/
+      .navbar {
+
+        overflow: hidden;
+        background-color: #333;
+        font-family: Arial, Helvetica, sans-serif;
       }
+      
+      .navbar a {
+        float: left;
+        font-size: 20px;
+        color: white;
+        text-align: center;
+        padding: 12px 14px;
+        text-decoration: none;
+      }
+      
+    .loginlogout{
+      float: right;
+    }
+    
     </style>
   </head>
   <body>
@@ -246,42 +235,41 @@
       </div>
   </div>
     <div class="testbox">
-      <form action="add_complain" method="POST">
+      <form action="/signup" method = "POST">
         {% csrf_token %}
         <div class="banner">
-          <h1>Add New Complain</h1>
+          <h1>User SignUp</h1>
         </div>
         <div class="colums">
           <div class="item">
-            <label for="contact">User Mobile Number<span>*</span></label>
-            <input id="contact" type="mobile" name="mobile" required/>
+            <label for="fname"> Name<span>*</span></label>
+            <input id="fname" type="text" name="name" required/>
           </div>
           <div class="item">
-            <label for="region"> Region <span>*</span></label>
-            <input id="region" type="text" name="region" required/>
+            <label for="lname"> Mobile Number<span>*</span></label>
+            <input id="lname" type="text" name="mobile" required/>
           </div>
           <div class="item">
-            <label for="city"> City <span>*</span></label>
-            <input id="city" type="text"   name="city" required/>
+            <label for="address2">Region<span>*</span></label>
+            <input id="address2" type="text"   name="region" required/>
           </div>
           <div class="item">
-            <label for="state"> State <span>*</span></label>
-            <input id="state" type="text" name="state" required/>
+            <label for="state">City<span>*</span></label>
+            <input id="state" type="text"   name="city" required/>
           </div>
           <div class="item">
-            <label for="details">Details</label>
-            <textarea id="details" class="comment" rows = "5" cols = "120" name = "details" required>
-            </textarea><br>
+            <label for="zip">State<span>*</span></label>
+            <input id="zip" type="text" name="state" required/>
           </div>
           <div class="item">
-            <label for="image">Upload Image<span></span></label>
-            <input id = "image" type="file" id="myFile" name="filename">
+            <label for="city">Password<span>*</span></label>
+            <input id="city" type="password"   name="password" required/>
           </div>
         </div>
-
         </div>
+        
         <div class="btn-block">
-          <button type="submit" href="/">Submit</button>
+          <button type="submit">Submit</button>
         </div>
       </form>
     </div>

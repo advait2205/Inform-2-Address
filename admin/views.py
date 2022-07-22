@@ -255,7 +255,7 @@ def manage_category(request, mobile):
     authority = dict(zip(colnames, authority))
     
     if request.method == "POST":
-        category = request.POST['category']
+        category = request.POST.get('category')
         submit = request.POST['submit']
         print(mobile, category, submit)
 
@@ -285,15 +285,12 @@ def manage_category(request, mobile):
                     messages.success(request, "Authority added to the department")
             
             else:
-                if category != user['department']:
-                    messages.error(request, "Given user is in the given category " +user['department'])
-                else:
-                    c.execute(f'''
-                        UPDATE my_db."authority"
-                        SET department = 'Not assigned'
-                        where mobile_number = '{mobile}'
-                    ''')
-                    messages.success(request, "Authority removed from department")
+                c.execute(f'''
+                    UPDATE my_db."authority"
+                    SET department = 'Not assigned'
+                    where mobile_number = '{mobile}'
+                ''')
+                messages.success(request, "Authority removed from department")
 
 
     c.execute(f'''

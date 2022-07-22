@@ -5,6 +5,7 @@ urlpatterns = [
     path('', views.show_categories),
     path('citizen/', views.show_categories),
     path('login', views.login),
+    path('signup', views.signup),
     path('logout', views.logout),
     path('citizen/<str:category>/complains', views.categorywise_complaints),
     path('citizen/<str:category>/<int:id>', views.upvote_complain),
