@@ -15,7 +15,7 @@ def handler404(request, *args, **argv):
     response.status_code = 404
     return response
 
-def get_statistics(request, mobile):
+def get_statistics_util(request, mobile):
 
     if request.user.is_authenticated == False:
         messages.error(request, 'Login to proceed further')
@@ -384,15 +384,15 @@ def manage_category_util(request, mobile):
                 messages.success(request, "Authority removed from department")
 
 
-    c.execute(f'''
-        select distinct department
-        from my_db.complains
-    ''')
-
     # c.execute(f'''
-    #     select category
-    #     from my_db.categories
+    #     select distinct department
+    #     from my_db.complains
     # ''')
+
+    c.execute(f'''
+        select category
+        from my_db.categories
+    ''')
 
     categories = c.fetchall()
     categories = [t[0] for t in categories]

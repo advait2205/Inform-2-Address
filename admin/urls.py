@@ -4,7 +4,7 @@ from admin import views
 
 urlpatterns = [
     path('statistics', views.get_statistics),
-    path('statistics/<str:mobile>', views.get_statistics),
+    path('statistics/<str:mobile>', views.get_statistics_util),
     path('add_authority', views.add_authority),
     path('edit_authority', views.edit_authority),
     path('edit_authority/<str:mobile>', views.edit_authority_util),
