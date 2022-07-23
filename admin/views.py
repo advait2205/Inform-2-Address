@@ -161,8 +161,6 @@ def add_authority(request):
         position = request.POST.get('position')
         password = request.POST.get('password')
 
-        print(name,mobile,department,region,city,state,password)
-
         conn = connect()
         c = conn.cursor()
 
@@ -207,7 +205,6 @@ def edit_authority(request):
         if request.POST.get('position') != "":
             position = "%" + request.POST['position'] + "%"
         
-        print(position)
         conn = connect()
         c = conn.cursor()
 
@@ -268,8 +265,6 @@ def edit_authority_util(request, mobile):
         if submit == "add_authority":
             return redirect("/admin/add_authority")
 
-    print(authority)
-
     return render(request, "add_authority.html", {"authority": authority, "editing":1})
 
 def manage_category(request):
@@ -295,7 +290,6 @@ def manage_category(request):
         if request.POST.get('position') != "":
             position = "%" + request.POST['position'] + "%"
         
-        print(position)
         conn = connect()
         c = conn.cursor()
 
@@ -315,8 +309,7 @@ def manage_category(request):
             return render(request, "admin_page.html")
 
         authorities = [dict(zip(colnames, authority)) for authority in authorities]
-        print(authorities)
-
+        
         conn.close()
         
         return render(request, "manage_category.html", {"authorities": authorities})
@@ -356,8 +349,7 @@ def manage_category_util(request, mobile):
     if request.method == "POST":
         category = request.POST.get('category')
         submit = request.POST['submit']
-        print(mobile, category, submit)
-
+        
         c.execute(f'''
             select *
             from my_db."authority"
@@ -396,6 +388,11 @@ def manage_category_util(request, mobile):
         select distinct department
         from my_db.complains
     ''')
+
+    # c.execute(f'''
+    #     select category
+    #     from my_db.categories
+    # ''')
 
     categories = c.fetchall()
     categories = [t[0] for t in categories]
