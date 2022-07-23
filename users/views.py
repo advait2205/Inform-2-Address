@@ -142,6 +142,11 @@ def show_categories(request):
         from my_db.complains
     ''')
 
+    # c.execute(f'''
+    #     SELECT category
+    #     from my_db.categories
+    # ''')
+
     categories = c.fetchall()
     categories = [category[0] for category in categories]
 
@@ -191,8 +196,7 @@ def categorywise_complaints(request, category):
     c.execute(f'''
         SELECT *
         FROM my_db.complains
-#HERE
-        WHERE lower(department) = lower('{category}') and state LIKE '{state}' and city LIKE '{city}' and region LIKE '{region}' and (user_mobile_number is NULL or user_mobile_number = '{user_mobile_number}') and start_time > '{start_date}'
+        WHERE lower(department) = lower('{category}') and state LIKE '{state}' and city LIKE '{city}' and region LIKE '{region}' and user_mobile_number like '{user_mobile_number}' and start_time > '{start_date}'
     ''')
     
     colnames = [desc[0] for desc in c.description]
@@ -200,8 +204,6 @@ def categorywise_complaints(request, category):
     complains = c.fetchall()
     complains = [dict(zip(colnames, complain)) for complain in complains]
     
-    print(complains[0])
-
     empty = "There are no complains with given category"
     if complains.__len__() != 0:
         empty = ""

@@ -31,7 +31,6 @@ def assigned_complains(request):
     end_date = start_date
 
     if request.method == "POST":
-        print(request.POST.get('state'), request.POST.get('city'), request.POST.get('region'))
         if request.POST.get('state') != "":
             state = request.POST.get('state')
         if request.POST.get('city') != "":
