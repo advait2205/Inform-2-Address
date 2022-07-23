@@ -137,18 +137,19 @@ def show_categories(request):
     conn = connect()
     c = conn.cursor()
 
-    c.execute(f'''
-        SELECT distinct lower(department)
-        from my_db.complains
-    ''')
-
     # c.execute(f'''
-    #     SELECT category
-    #     from my_db.categories
+    #     SELECT distinct lower(department)
+    #     from my_db.complains
     # ''')
+
+    c.execute(f'''
+        SELECT lower(category)
+        from my_db.categories
+    ''')
 
     categories = c.fetchall()
     categories = [category[0] for category in categories]
+    print(categories)
 
     conn.close()
         
@@ -157,6 +158,7 @@ def show_categories(request):
 
 def categorywise_complaints(request, category):
 
+    
     state = "%"
     city = "%"
     region = "%"
@@ -196,7 +198,7 @@ def categorywise_complaints(request, category):
     c.execute(f'''
         SELECT *
         FROM my_db.complains
-        WHERE lower(department) = lower('{category}') and state LIKE '{state}' and city LIKE '{city}' and region LIKE '{region}' and user_mobile_number like '{user_mobile_number}' and start_time > '{start_date}'
+        WHERE lower(department) like lower('%{category}%') and state LIKE '{state}' and city LIKE '{city}' and region LIKE '{region}' and user_mobile_number like '{user_mobile_number}' and start_time > '{start_date}'
     ''')
     
     colnames = [desc[0] for desc in c.description]
