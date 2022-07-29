@@ -8,6 +8,7 @@ from django.contrib.auth.models import Group, User
 from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
 import psycopg2
 import json
+import re
 from users.send_message_telegram_group import send_message
 
 def handler404(request, *args, **argv):
@@ -137,11 +138,6 @@ def show_categories(request):
     conn = connect()
     c = conn.cursor()
 
-    # c.execute(f'''
-    #     SELECT distinct lower(department)
-    #     from my_db.complains
-    # ''')
-
     c.execute(f'''
         SELECT lower(category)
         from my_db.categories
@@ -149,7 +145,6 @@ def show_categories(request):
 
     categories = c.fetchall()
     categories = [category[0] for category in categories]
-    print(categories)
 
     conn.close()
         
@@ -157,7 +152,7 @@ def show_categories(request):
 
 
 def categorywise_complaints(request, category):
-
+    category = re.sub('%20', ' ', category)
     
     state = "%"
     city = "%"

@@ -252,10 +252,7 @@
           <h1>Add New Complain</h1>
         </div>
         <div class="colums">
-          <div class="item">
-            <label for="contact">User Mobile Number<span>*</span></label>
-            <input id="contact" type="mobile" name="mobile" required/>
-          </div>
+          <input id="contact" type="mobile" name="mobile" hidden="true" value="{{request.user.username}}" required/>
           <div class="item">
             <label for="region"> Region <span>*</span></label>
             <input id="region" type="text" name="region" required/>

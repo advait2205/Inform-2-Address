@@ -151,6 +151,9 @@ def add_authority(request):
     if not User.objects.get(username=request.user.username).groups.all().filter(name='admin'):
         return handler404(request)
     
+    conn = connect()
+    c = conn.cursor()
+
     if request.method == "POST":
         name = request.POST.get('name')
         mobile = request.POST.get('mobile')
@@ -161,9 +164,7 @@ def add_authority(request):
         position = request.POST.get('position')
         password = request.POST.get('password')
 
-        conn = connect()
-        c = conn.cursor()
-
+        
         c.execute(f'''
             DELETE from
             my_db.authority
@@ -176,10 +177,18 @@ def add_authority(request):
                 VALUES ('{name}', '{mobile}', '{department}', '{region}', '{city}', '{state}', '{password}', '{position}', '123456789');
         ''')
 
-        conn.commit()
-        conn.close()
+    c.execute(f'''
+        select category
+        from my_db.categories
+    ''')
+
+    categories = c.fetchall()
+    categories = [t[0] for t in categories]
+
+    conn.commit()
+    conn.close()
             
-    return render(request, "add_authority.html")
+    return render(request, "add_authority.html", {"categories": categories})
 
 def edit_authority(request):
 
@@ -195,6 +204,9 @@ def edit_authority(request):
     region = "%"
     position = "%"
 
+    conn = connect()
+    c = conn.cursor()
+
     if request.method == "POST":
         if request.POST.get('state') != "":
             state = request.POST.get('state')
@@ -205,9 +217,6 @@ def edit_authority(request):
         if request.POST.get('position') != "":
             position = "%" + request.POST['position'] + "%"
         
-        conn = connect()
-        c = conn.cursor()
-
         c.execute(f'''
             SELECT * 
             FROM my_db."authority"
@@ -228,8 +237,17 @@ def edit_authority(request):
         conn.close()
         
         return render(request, "add_authority.html", {"edit":1, "authorities": authorities})
-        
-    return render(request, "add_authority.html", {"edit":1})
+
+    c.execute(f'''
+        select category
+        from my_db.categories
+    ''')
+
+    categories = c.fetchall()
+    categories = [t[0] for t in categories]
+    conn.close()
+    
+    return render(request, "add_authority.html", {"edit":1, "categories": categories})
 
 def edit_authority_util(request, mobile):
     
@@ -261,11 +279,22 @@ def edit_authority_util(request, mobile):
     authority = dict(zip(colnames, authority))
     
     if request.method == "POST":
+        conn.close()
         submit = request.metho.get('submit')
         if submit == "add_authority":
             return redirect("/admin/add_authority")
 
-    return render(request, "add_authority.html", {"authority": authority, "editing":1})
+    c.execute(f'''
+        select category
+        from my_db.categories
+    ''')
+
+    categories = c.fetchall()
+    categories = [t[0] for t in categories]
+    
+    conn.close()
+    
+    return render(request, "add_authority.html", {"authority": authority, "editing":1, "categories":categories})
 
 def manage_category(request):
     if request.user.is_authenticated == False:
@@ -364,7 +393,7 @@ def manage_category_util(request, mobile):
             messages.error(request, "No user with given id")
         else:
             
-            if submit == "Add to the Category":
+            if submit == "Add to the Department":
                 if category == user['department']:
                     messages.error(request, "Given user is already in the category " + user['department'])
                 else:

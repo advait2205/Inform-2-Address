@@ -150,23 +150,23 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         </tr> -->
       </table>
     
-      <p class="heading">Enter the details to add the authority to the category</p>
+      <p class="heading">Enter the details to add the authority to the Department</p>
       <form class="form" id="get_cat_form" action="{{request.path}}" method = "POST" style = "padding:0.5cm 1cm;">
         {% csrf_token %}
-        <label for="category"> category:</label>
+        <label for="category"> Department:</label>
         <select name="category" id="get_cat_form">
           {% for category in categories %}
           <option value="{{category}}">{{category}}</option>
           {% endfor %}
         </select>
         <br>
-        <input type="submit" name="submit" value="Add to the Category" style = "margin:0.5cm 0;"/>
+        <input type="submit" name="submit" value="Add to the Department" style = "margin:0.5cm 0;"/>
     </form>
     
-    <p class="heading">Press the button to remove the authority from category</p>
+    <p class="heading">Press the button to remove the authority from Department</p>
     <form class="form" id="get_cat_form" action="{{request.path}}" method = "POST" style = "padding:0.5cm 1cm;">
       {% csrf_token %}
-      <input type="submit" name="submit" value="Remove from the Category"style = "margin:0.5cm 0;"/>
+      <input type="submit" name="submit" value="Remove from the Department"style = "margin:0.5cm 0;"/>
       </form>
       {% endif %}
 </body>

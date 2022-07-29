@@ -341,8 +341,16 @@ tr:nth-child(even) {background-color: #f2f2f2;}
             <input id="mobile" type="text" name="mobile" value="{{authority.mobile_number}}" required/>
           </div>
           <div class="item">
-            <label for="department">Department<span>*</span></label>
-            <input id="department" type="text"   name="department" value="{{authority.department}}" required/>
+            <label for="category"> Department:</label><br>
+            <select name="department" id="category"required>
+              {% for category in categories %}
+              <option value="{{category}}"
+              {% ifequal category authority.department %}
+                selected="selected"
+              {% endifequal %}
+              >{{category}}</option>
+              {% endfor %}
+            </select>
           </div>
           <div class="item">
             <label for="region">Region<span>*</span></label>
@@ -362,7 +370,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
           </div>
           <div class="item">
             <label for="Password">Password<span>*</span></label>
-            <input id="Password" type="text"   name="password" value="{{authority.password}}" required/>
+            <input id="Password" type="password"   name="password" value="{{authority.password}}" required/>
           </div>
         </div>
         </div>
