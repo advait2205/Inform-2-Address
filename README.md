@@ -24,3 +24,25 @@ Features Implemented till now:
 
 Features to-be implemented:
 - Solve Image Storage Issue
+
+## Setting up the site locally on computer
+
+1. Clone the repo using following commnad
+
+```
+git clone https://github.com/advait2205/Inform-2-Address.git
+```
+
+2. Fill the details in .env_example file and rename it to ".env".
+
+3. Now, open this folder in the terminal and run the following command to install the dependencies
+```
+pip install -r requirements.txt
+```
+
+4. Now, run the following command to start the server locally.
+```
+python manage.py runserver
+```
+
+5. Click on this url to see the site: [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
